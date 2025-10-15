@@ -8,6 +8,7 @@ maintainers = [{ name = "Andrew Tarzia", email = "andrew.tarzia@gmail.com" }]
 dependencies = [
     "numpy<2",
     "rustworkx",
+    "networkx",
 ]
 requires-python = ">=3.11"
 dynamic = ["version"]
@@ -49,7 +50,8 @@ convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
-
+    "S101",
+    "D100",
 ]
 "docs/source/conf.py" = ["D100", "INP001"]
 
