@@ -32,6 +32,9 @@ dev = [
 ]
 
 
+[project.scripts]
+build-graph-library = "agx._internal.scripts.build_graph_library:main"
+
 [project.urls]
 github = "https://github.com/andrewtarzia/agx"
 documentation = "https://agx.readthedocs.io"
