@@ -1,15 +1,19 @@
 """Define classes for enumeration of graphs."""
 
 import gzip
+import itertools as it
 import json
 import logging
 import pathlib
 from collections import Counter, abc, defaultdict
+from copy import deepcopy
 from dataclasses import dataclass
 
 import numpy as np
 import rustworkx as rx
 
+from .configuration import Configuration
+from .configuredcode import ConfiguredCode
 from .node import Node, NodeType
 from .topology_code import TopologyCode
 
@@ -40,7 +44,7 @@ class TopologyIterator:
 
       To reproduce the ``no_doubles'' dataset, you must use
       ``graph_set=rx_nodoubles``, or filter the topology codes after
-      generation using the :class:`cgexplore.scram.TopologyCode` methods
+      generation using the :class:`agx.TopologyCode` methods
       (this is now the recommended approach).
 
     Parameters:
