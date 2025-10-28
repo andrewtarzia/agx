@@ -4,7 +4,7 @@ import logging
 from collections import abc
 from dataclasses import dataclass
 
-from .node import Node
+from .node import NodeType
 
 logger = logging.getLogger(__name__)
 
@@ -14,12 +14,19 @@ class Configuration:
     """Naming convention for graph node configurations."""
 
     idx: int
-    node_counts: dict[Node, int]
+    node_types: dict[NodeType, int]
     node_idx_dict: dict[int, abc.Sequence[int]]
 
-    def get_node_dictionary(self) -> dict[Node, abc.Sequence[int]]:
-        """Get the node dictionary."""
-        idx_map = {node.type_id: node for node in self.node_counts}
+    def get_node_dictionary(self) -> dict[NodeType, abc.Sequence[int]]:
+        """Get the node dictionary.
+
+        This is equivalent to the building block dictionary you need, where
+        each key is a type of building block with a set number of connections.
+
+        """
+        idx_map = {
+            node_type.type_id: node_type for node_type in self.node_types
+        }
         return {
             idx_map[idx]: tuple(vertices)
             for idx, vertices in self.node_idx_dict.items()

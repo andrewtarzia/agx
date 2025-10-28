@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 import networkx as nx
 import numpy as np
+import numpy.typing as npt
 import rustworkx as rx
 
 logger = logging.getLogger(__name__)
@@ -112,7 +113,7 @@ class TopologyCode:
         self,
         layout_type: str,
         scale: float,
-    ) -> dict[int, np.ndarray]:
+    ) -> dict[int, npt.NDArray[np.float64]]:
         """Take a graph and genereate from graph vertex positions.
 
         .. important::

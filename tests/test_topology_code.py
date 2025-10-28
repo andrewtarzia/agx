@@ -77,7 +77,7 @@ def test_topology_code_rxgraph(graph_data: CaseData) -> None:
             int(i["id"].strip("n")) for i in test.nodes()
         ] == tc.get_graph().nodes()
         assert np.allclose(
-            rx.graph_adjacency_matrix(test),
+            rx.graph_adjacency_matrix(test),  # type: ignore[arg-type]
             rx.graph_adjacency_matrix(tc.get_graph()),
         )
 
@@ -93,7 +93,7 @@ def test_topology_code_rxgraph(graph_data: CaseData) -> None:
             int(i["id"].strip("n")) for i in test.nodes()
         ] == tc.get_weighted_graph().nodes()
         assert np.allclose(
-            rx.graph_adjacency_matrix(test),
+            rx.graph_adjacency_matrix(test),  # type: ignore[arg-type]
             rx.graph_adjacency_matrix(tc.get_weighted_graph()),
         )
 

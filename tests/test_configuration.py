@@ -39,7 +39,7 @@ def test_configuration(graph_data: CaseData) -> None:
     else:
         assert len(iterator.get_configurations()) == graph_data.num_configs
 
-        run_topology_codes = []
+        run_topology_codes: list[agx.ConfiguredCode] = []
         # Check for iso checks, iterating over topology codes as well.
         for configured_code in iterator.yield_configured_codes():
             if agx.utilities.is_configured_code_isomoprhic(

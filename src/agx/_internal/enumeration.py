@@ -170,7 +170,7 @@ class TopologyIterator:
     def _passes_tests(
         self,
         topology_code: TopologyCode,
-        combinations_tested: set,
+        combinations_tested: set[str],
         combinations_passed: list[abc.Sequence[tuple[int, int]]],
     ) -> bool:
         # Need to check for nonsensical ones here.
@@ -535,7 +535,7 @@ class TopologyIterator:
 
             config = Configuration(
                 idx=len(possible_dicts),
-                node_counts=self.node_counts,
+                node_types=self.node_counts,
                 node_idx_dict={
                     i: tuple(j) for i, j in new_possibility.items()
                 },

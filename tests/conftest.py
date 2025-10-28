@@ -20,7 +20,7 @@ bbs = {1, 2, 3, 4}
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
-            max_samples=1e4,
+            max_samples=int(1e4),
             graph_filename="rxx_2-4FG_4-2FG.json.gz",
             num_graphs=2,
             num_configs=0,
@@ -39,7 +39,7 @@ bbs = {1, 2, 3, 4}
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
-            max_samples=1e4,
+            max_samples=int(1e4),
             graph_filename="rxx_3-4FG_6-2FG.json.gz",
             num_graphs=4,
             num_configs=20,
@@ -77,7 +77,7 @@ bbs = {1, 2, 3, 4}
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
-            max_samples=1e4,
+            max_samples=int(1e4),
             graph_filename="rxx_4-3FG_6-2FG.json.gz",
             num_graphs=5,
             num_configs=0,
@@ -92,7 +92,7 @@ bbs = {1, 2, 3, 4}
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
-            max_samples=1e4,
+            max_samples=int(1e4),
             graph_filename="rxx_5-4FG.json.gz",
             num_graphs=6,
             num_configs=0,
@@ -111,7 +111,7 @@ bbs = {1, 2, 3, 4}
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
-            max_samples=1e4,
+            max_samples=int(1e4),
             graph_filename="rxx_2-3FG_2-2FG_2-1FG.json.gz",
             num_graphs=2,
             num_configs=0,
@@ -130,7 +130,7 @@ bbs = {1, 2, 3, 4}
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
-            max_samples=1e4,
+            max_samples=int(1e4),
             graph_filename="rxx_3-4FG_4-3FG.json.gz",
             num_graphs=9,
             num_configs=4,

@@ -37,9 +37,7 @@ Additionally, one might want to build graphs that are not only
 .. important::
 
   While we have one, two and three type graphs below, within each, any
-  stoichiometry or configuration of same-numbered functional groups can be used.
-  For example, a heteroleptic cage of form Pd_n L_n L'_n is a two type graph
-  with ``n`` 4-FG Pd, ``n`` 2-FG L and ``n`` 2-FG L' building blocks.
+  stoichiometry or configuration of same-numbered connections can be used.
 
 
 One-type graphs
@@ -50,19 +48,14 @@ Generated with code:
 
 .. code-block:: python
 
-    bbs = {
-        1: stk.BuildingBlock("BrC", (stk.BromoFactory(),)),
-        2: stk.BuildingBlock("BrCCCCBr", (stk.BromoFactory(),)),
-        3: stk.BuildingBlock("BrCC(Br)CCBr", (stk.BromoFactory(),)),
-        4: stk.BuildingBlock("BrCC(Br)CCC(Br)CCBr", (stk.BromoFactory(),)),
-    }
+    bbs = {1, 2, 3, 4, 5}
     multipliers = range(1, 11)
-
     for midx, fgnum in it.product(multipliers, bbs):
         try:
-            iterator = agx(
-                building_block_counts={
-                    bbs[fgnum]: midx,
+            string = f"{midx}-{fgnum}FG"
+            iterator = agx.TopologyIterator(
+                node_counts={
+                    agx.NodeType(type_id=0, num_connections=fgnum): midx,
                 },
                 graph_type=f"{midx}-{fgnum}FG",
                 graph_set="rxx",
@@ -78,7 +71,6 @@ Generated with code:
     :hide:
 
     import itertools as it
-    import stk
     import agx
 
     knowns = (
@@ -115,19 +107,14 @@ Generated with code:
         "11-2FG",
         "12-1FG",
     )
-    bbs = {
-        1: stk.BuildingBlock("BrC", (stk.BromoFactory(),)),
-        2: stk.BuildingBlock("BrCCCCBr", (stk.BromoFactory(),)),
-        3: stk.BuildingBlock("BrCC(Br)CCBr", (stk.BromoFactory(),)),
-        4: stk.BuildingBlock("BrCC(Br)CCC(Br)CCBr", (stk.BromoFactory(),)),
-    }
+    bbs = {1, 2, 3, 4, 5}
     multipliers = range(1, 11)
-
     for midx, fgnum in it.product(multipliers, bbs):
         try:
+            string = f"{midx}-{fgnum}FG"
             iterator = agx.TopologyIterator(
-                building_block_counts={
-                    bbs[fgnum]: midx,
+                node_counts={
+                    agx.NodeType(type_id=0, num_connections=fgnum): midx,
                 },
                 graph_type=f"{midx}-{fgnum}FG",
                 graph_set="rxx",
@@ -150,15 +137,13 @@ Generated with code:
 
 .. code-block:: python
 
-    bbs = {
-        1: stk.BuildingBlock("BrC", (stk.BromoFactory(),)),
-        2: stk.BuildingBlock("BrCCCCBr", (stk.BromoFactory(),)),
-        3: stk.BuildingBlock("BrCC(Br)CCBr", (stk.BromoFactory(),)),
-        4: stk.BuildingBlock("BrCC(Br)CCC(Br)CCBr", (stk.BromoFactory(),)),
-    }
-    multipliers = range(1, 13)
+    bbs = {1, 2, 3, 4, 5}
 
-    two_type_stoichiometries = ((1, 2), (2, 3), (3, 4))
+    # Two typers.
+    multipliers = range(1, 13)
+    two_type_stoichiometries = tuple(
+        (i, j) for i, j in it.product((1, 2, 3, 4), repeat=2)
+    )
     for midx, fgnum1, fgnum2, stoich in it.product(
         multipliers, bbs, bbs, two_type_stoichiometries
     ):
@@ -166,16 +151,21 @@ Generated with code:
             continue
 
         # Do not do all for larger stoichiomers.
-        if stoich in ((2, 3), (3, 4)) and midx > 5:
+        if stoich in ((2, 3), (3, 4)) and midx > 4:  # noqa: PLR2004
             continue
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
         try:
-            iterator = agx(
-                building_block_counts={
-                    bbs[fgnum1_]: midx * stoich[0],
-                    bbs[fgnum2_]: midx * stoich[1],
+            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
+            f"{midx * stoich[1]}-{fgnum2_}FG_"
+            logger.info("trying %s", string)
+            iterator = agx.TopologyIterator(
+                node_counts={
+                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                    * stoich[0],
+                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                    * stoich[1],
                 },
                 graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
                 f"{midx * stoich[1]}-{fgnum2_}FG",
@@ -192,7 +182,6 @@ Generated with code:
     :hide:
 
     import itertools as it
-    import stk
     import agx
 
     knowns = (
@@ -205,15 +194,13 @@ Generated with code:
         "4-3FG_6-2FG",
     )
 
-    bbs = {
-        1: stk.BuildingBlock("BrC", (stk.BromoFactory(),)),
-        2: stk.BuildingBlock("BrCCCCBr", (stk.BromoFactory(),)),
-        3: stk.BuildingBlock("BrCC(Br)CCBr", (stk.BromoFactory(),)),
-        4: stk.BuildingBlock("BrCC(Br)CCC(Br)CCBr", (stk.BromoFactory(),)),
-    }
-    multipliers = range(1, 13)
+    bbs = {1, 2, 3, 4, 5}
 
-    two_type_stoichiometries = ((1, 2), (2, 3), (3, 4))
+    # Two typers.
+    multipliers = range(1, 13)
+    two_type_stoichiometries = tuple(
+        (i, j) for i, j in it.product((1, 2, 3, 4), repeat=2)
+    )
     for midx, fgnum1, fgnum2, stoich in it.product(
         multipliers, bbs, bbs, two_type_stoichiometries
     ):
@@ -221,16 +208,20 @@ Generated with code:
             continue
 
         # Do not do all for larger stoichiomers.
-        if stoich in ((2, 3), (3, 4)) and midx > 5:
+        if stoich in ((2, 3), (3, 4)) and midx > 4:  # noqa: PLR2004
             continue
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
         try:
+            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
+            f"{midx * stoich[1]}-{fgnum2_}FG_"
             iterator = agx.TopologyIterator(
-                building_block_counts={
-                    bbs[fgnum1_]: midx * stoich[0],
-                    bbs[fgnum2_]: midx * stoich[1],
+                node_counts={
+                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                    * stoich[0],
+                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                    * stoich[1],
                 },
                 graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
                 f"{midx * stoich[1]}-{fgnum2_}FG",
@@ -255,12 +246,7 @@ Generated with code:
 
 .. code-block:: python
 
-    bbs = {
-        1: stk.BuildingBlock("BrC", (stk.BromoFactory(),)),
-        2: stk.BuildingBlock("BrCCCCBr", (stk.BromoFactory(),)),
-        3: stk.BuildingBlock("BrCC(Br)CCBr", (stk.BromoFactory(),)),
-        4: stk.BuildingBlock("BrCC(Br)CCC(Br)CCBr", (stk.BromoFactory(),)),
-    }
+    bbs = {1, 2, 3, 4, 5}
 
     # Three typers.
     multipliers = (1, 2)
@@ -277,11 +263,18 @@ Generated with code:
         )
 
         try:
+            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
+            f"{midx * stoich[1]}-{fgnum2_}FG_"
+            f"{midx * stoich[2]}-{fgnum3_}FG"
+            logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
-                building_block_counts={
-                    bbs[fgnum1_]: midx * stoich[0],
-                    bbs[fgnum2_]: midx * stoich[1],
-                    bbs[fgnum3_]: midx * stoich[2],
+                node_counts={
+                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                    * stoich[0],
+                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                    * stoich[1],
+                    agx.NodeType(type_id=2, num_connections=fgnum3_): midx
+                    * stoich[2],
                 },
                 graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
                 f"{midx * stoich[1]}-{fgnum2_}FG_"
@@ -300,7 +293,6 @@ Generated with code:
     :hide:
 
     import itertools as it
-    import stk
     import agx
 
     knowns = (
@@ -326,12 +318,7 @@ Generated with code:
         "6-3FG_8-2FG_2-1FG",
     )
 
-    bbs = {
-        1: stk.BuildingBlock("BrC", (stk.BromoFactory(),)),
-        2: stk.BuildingBlock("BrCCCCBr", (stk.BromoFactory(),)),
-        3: stk.BuildingBlock("BrCC(Br)CCBr", (stk.BromoFactory(),)),
-        4: stk.BuildingBlock("BrCC(Br)CCC(Br)CCBr", (stk.BromoFactory(),)),
-    }
+    bbs = {1, 2, 3, 4, 5}
 
     # Three typers.
     multipliers = (1, 2)
@@ -348,11 +335,17 @@ Generated with code:
         )
 
         try:
+            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
+            f"{midx * stoich[1]}-{fgnum2_}FG_"
+            f"{midx * stoich[2]}-{fgnum3_}FG"
             iterator = agx.TopologyIterator(
-                building_block_counts={
-                    bbs[fgnum1_]: midx * stoich[0],
-                    bbs[fgnum2_]: midx * stoich[1],
-                    bbs[fgnum3_]: midx * stoich[2],
+                node_counts={
+                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                    * stoich[0],
+                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                    * stoich[1],
+                    agx.NodeType(type_id=2, num_connections=fgnum3_): midx
+                    * stoich[2],
                 },
                 graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
                 f"{midx * stoich[1]}-{fgnum2_}FG_"
