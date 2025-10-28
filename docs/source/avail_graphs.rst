@@ -1,13 +1,8 @@
 Available graphs
 ================
 
-A list of the graphs available in :mod:`cgexplore.scram` for performing blind
-structure prediction. Files can be found in ``src/cgexplore/_internal/scram/known_graphs``.
-
-.. important::
-
-  All previous graphs will be kept in ``src/cgexplore/_internal/scram/known_graphs``
-  and are available for use, however, I recommend using the new naming convention.
+A list of the graphs available in :mod:`agx`.
+Files can be found in ``src/agx/_internal/known_graphs``.
 
 New naming convention ``rxx``:
 ------------------------------
@@ -27,14 +22,13 @@ Graphs:
 
 .. important::
 
-  All new graphs are run with a ``max_samples`` of 1e7 (compared to 1e5 of
-  ``cgexplore`` version ``2025.2.5.1``).
+  All new graphs are run with a ``max_samples`` of 1e7.
 
 Filtering graphs
 ^^^^^^^^^^^^^^^^
 
 The code no longer hard codes filtering within generation, but
-:class:`cgexplore.scram.TopologyCode` offers methods for filtering for
+:class:`agx.TopologyCode` offers methods for filtering for
 double wells or parallel edges.
 Additionally, one might want to build graphs that are not only
 ``one connected graph``. To do so, you must change ``allowed_num_components``.
@@ -66,7 +60,7 @@ Generated with code:
 
     for midx, fgnum in it.product(multipliers, bbs):
         try:
-            iterator = cgx.scram.TopologyIterator(
+            iterator = agx(
                 building_block_counts={
                     bbs[fgnum]: midx,
                 },
@@ -85,7 +79,7 @@ Generated with code:
 
     import itertools as it
     import stk
-    import cgexplore as cgx
+    import agx
 
     knowns = (
         "8-3FG",
@@ -131,7 +125,7 @@ Generated with code:
 
     for midx, fgnum in it.product(multipliers, bbs):
         try:
-            iterator = cgx.scram.TopologyIterator(
+            iterator = agx.TopologyIterator(
                 building_block_counts={
                     bbs[fgnum]: midx,
                 },
@@ -178,7 +172,7 @@ Generated with code:
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
         try:
-            iterator = cgx.scram.TopologyIterator(
+            iterator = agx(
                 building_block_counts={
                     bbs[fgnum1_]: midx * stoich[0],
                     bbs[fgnum2_]: midx * stoich[1],
@@ -199,7 +193,7 @@ Generated with code:
 
     import itertools as it
     import stk
-    import cgexplore as cgx
+    import agx
 
     knowns = (
         "1-2FG_2-1FG",
@@ -233,7 +227,7 @@ Generated with code:
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
         try:
-            iterator = cgx.scram.TopologyIterator(
+            iterator = agx.TopologyIterator(
                 building_block_counts={
                     bbs[fgnum1_]: midx * stoich[0],
                     bbs[fgnum2_]: midx * stoich[1],
@@ -254,7 +248,7 @@ Generated with code:
 Three-type graphs
 ^^^^^^^^^^^^^^^^^
 
-Produced graphs for ``m`` in (1 - 3) with FGs in (1 - 4) and
+Produced graphs for ``m`` in (1, 2) with FGs in (1 - 4) and
 a combinatorial check of stoichiometries. Note that current versions will
 always focus on smaller FG BBs binding only to the BB with the most FGs.
 Generated with code:
@@ -269,7 +263,7 @@ Generated with code:
     }
 
     # Three typers.
-    multipliers = range(1, 5)
+    multipliers = (1, 2)
     three_type_stoichiometries = tuple(
         (i, j, k) for i, j, k in it.product((1, 2, 3, 4), repeat=3)
     )
@@ -283,7 +277,7 @@ Generated with code:
         )
 
         try:
-            iterator = cgx.scram.TopologyIterator(
+            iterator = agx.TopologyIterator(
                 building_block_counts={
                     bbs[fgnum1_]: midx * stoich[0],
                     bbs[fgnum2_]: midx * stoich[1],
@@ -307,7 +301,7 @@ Generated with code:
 
     import itertools as it
     import stk
-    import cgexplore as cgx
+    import agx
 
     knowns = (
         "1-3FG_1-2FG_1-1FG",
@@ -340,7 +334,7 @@ Generated with code:
     }
 
     # Three typers.
-    multipliers = range(1, 5)
+    multipliers = (1, 2)
     three_type_stoichiometries = tuple(
         (i, j, k) for i, j, k in it.product((1, 2, 3, 4), repeat=3)
     )
@@ -354,7 +348,7 @@ Generated with code:
         )
 
         try:
-            iterator = cgx.scram.TopologyIterator(
+            iterator = agx.TopologyIterator(
                 building_block_counts={
                     bbs[fgnum1_]: midx * stoich[0],
                     bbs[fgnum2_]: midx * stoich[1],

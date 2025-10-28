@@ -3,7 +3,7 @@
    :caption: agraphx
    :maxdepth: 1
 
-   Structure prediction <scram>
+   Graphs <graphs>
    Utilities <utilities>
 
 .. toctree::
@@ -26,9 +26,6 @@ Introduction
 
 :mod:`agx` (a graph explorer) is toolkit for enumerating graphs in the context
 of structure prediction.
-
-.. figure:: _static/logo.png
-
 
 .. important::
 
@@ -61,7 +58,7 @@ Examples
 ========
 
 Examples of usage can be seen in
-`cgexplore <https://github.com/andrewtarzia/CGExplore>`_.
+`cgexplore <https://cgexplore.readthedocs.io/en/latest/>`_.
 
 
 How To Cite
