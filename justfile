@@ -14,13 +14,13 @@ check:
   trap error=1 ERR
 
   echo
-  ( set -x; uv run ruff check . )
+  ( set -x; uv run ruff check src tests )
 
   echo
-  ( set -x; uv run ruff format --check . )
+  ( set -x; uv run ruff format --check src tests )
 
   echo
-  ( set -x; uv run mypy src )
+  ( set -x; uv run mypy src tests )
 
   echo
   ( set -x; uv run pytest --cov=src --cov-report term-missing )
