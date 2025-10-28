@@ -427,3 +427,128 @@ class TopologyIterator:
             num_components = topology_code.get_number_connected_components()
             if num_components == self.allowed_num_components:
                 yield topology_code
+
+    def _get_modifiable_types(self) -> tuple[int]:
+        """Get the connection counts with >1 equivalent nodes."""
+        count_of_connection_types: dict[int, int] = defaultdict(int)
+        for node in self.node_counts:
+            count_of_connection_types[node.num_connections] += 1
+
+        modifiable_types = tuple(
+            connection_count
+            for connection_count, count in count_of_connection_types.items()
+            if count > 1
+        )
+
+        if len(modifiable_types) != 1:
+            msg = (
+                f"modifiable_types is len {len(modifiable_types)}. If 0"
+                ", then you have no need to screen building block "
+                "configurations. If greater than 2, then this code cannot "
+                "handle this yet. Sorry!"
+            )
+            raise RuntimeError(msg)
+        return modifiable_types
+
+    def get_configurations(self) -> abc.Sequence[Configuration]:
+        """Get potential node configurations."""
+        # Get building blocks with the same functional group count - these are
+        # swappable.
+        modifiable_types = self._get_modifiable_types()
+
+        # Get the associated vertex ids.
+        modifiable_vertices = {
+            num_connections: self.vertex_types_by_conn[num_connections]
+            for num_connections in self.vertex_types_by_conn
+            if num_connections in modifiable_types
+        }
+
+        unmodifiable_vertices = {
+            num_connections: self.vertex_types_by_conn[num_connections]
+            for num_connections in self.vertex_types_by_conn
+            if num_connections not in modifiable_types
+        }
+
+        # Generate the configuration dictionary, filling in unmodifiable node
+        # types, and giving an empty space for modifidable ones.
+        empty_config_dict: dict[int, list[int]] = {}
+        for node in self.node_counts:
+            if node.num_connections in modifiable_types:
+                empty_config_dict[node.type_id] = []
+            else:
+                empty_config_dict[node.type_id] = list(
+                    unmodifiable_vertices[node.num_connections]
+                )
+
+        # Get the list of node type ids that are modifiable.
+        modifiable_type_ids = tuple(
+            type_id
+            for type_id, vertices in empty_config_dict.items()
+            if len(vertices) == 0
+        )
+
+        # Define a default list of the modifiable node indices to check new
+        # configurations.
+        modifiable_default = []
+        for node, count in self.node_counts.items():
+            if node.type_id not in modifiable_type_ids:
+                continue
+            modifiable_default.extend([node.type_id] * count)
+
+        # Iterate over the placement of the bb indices.
+        vertex_map = {
+            v_idx: idx
+            for idx, v_idx in enumerate(
+                # ASSUMES 1 modifiable FG.
+                modifiable_vertices[modifiable_types[0]]
+            )
+        }
+
+        iteration = it.product(
+            # ASSUMES 1 modifiable FG.
+            *(
+                modifiable_type_ids
+                for i in modifiable_vertices[modifiable_types[0]]
+            )
+        )
+
+        saved_dicts = set()
+        possible_dicts: list[Configuration] = []
+        for config_integers in iteration:
+            # Check for default requirements for configuration.
+            if sorted(config_integers) != modifiable_default:
+                continue
+
+            config_dict = {
+                vertex_id: config_integers[vertex_map[vertex_id]]
+                # ASSUMES 1 modifiable FG.
+                for vertex_id in modifiable_vertices[modifiable_types[0]]
+            }
+
+            new_possibility = deepcopy(empty_config_dict)
+            for vertex_id, node_type_id in config_dict.items():
+                new_possibility[node_type_id].append(vertex_id)
+
+            config = Configuration(
+                idx=len(possible_dicts),
+                node_counts=self.node_counts,
+                node_idx_dict={
+                    i: tuple(j) for i, j in new_possibility.items()
+                },
+            )
+
+            # Check for deduplication.
+            if config.get_hashable_idx_dict() in saved_dicts:
+                continue
+
+            saved_dicts.add(config.get_hashable_idx_dict())
+            possible_dicts.append(config)
+
+        return possible_dicts
+
+    def yield_configured_codes(self) -> abc.Iterator[ConfiguredCode]:
+        """Get potential node configurations."""
+        for config, code in it.product(
+            self.get_configurations(), self.yield_graphs()
+        ):
+            yield ConfiguredCode(topology_code=code, configuration=config)
