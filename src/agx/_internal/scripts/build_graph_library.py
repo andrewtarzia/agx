@@ -27,7 +27,9 @@ def one_type_function() -> None:
             string = f"{midx}-{fgnum}FG"
             logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
-                node_counts={agx.NodeType(fgnum): midx},
+                node_counts={
+                    agx.NodeType(type_id=0, num_connections=fgnum): midx,
+                },
                 graph_type=f"{midx}-{fgnum}FG",
                 graph_set="rxx",
             )
@@ -65,8 +67,10 @@ def two_type_function() -> None:
             logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
                 node_counts={
-                    agx.NodeType(fgnum1_): midx * stoich[0],
-                    agx.NodeType(fgnum2_): midx * stoich[1],
+                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                    * stoich[0],
+                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                    * stoich[1],
                 },
                 graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
                 f"{midx * stoich[1]}-{fgnum2_}FG",
@@ -104,9 +108,12 @@ def three_type_function() -> None:
             logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
                 node_counts={
-                    agx.NodeType(fgnum1_): midx * stoich[0],
-                    agx.NodeType(fgnum2_): midx * stoich[1],
-                    agx.NodeType(fgnum3_): midx * stoich[2],
+                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                    * stoich[0],
+                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                    * stoich[1],
+                    agx.NodeType(type_id=2, num_connections=fgnum3_): midx
+                    * stoich[2],
                 },
                 graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
                 f"{midx * stoich[1]}-{fgnum2_}FG_"
