@@ -3,9 +3,9 @@
 import logging
 from collections import Counter, abc
 from dataclasses import dataclass
-from typing import Literal
 
 import networkx as nx
+import numpy as np
 import rustworkx as rx
 
 logger = logging.getLogger(__name__)
@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 class TopologyCode:
     """Naming convention for topology graphs."""
 
+    idx: int
     vertex_map: abc.Sequence[tuple[int, int]]
 
     def get_as_string(self) -> str:

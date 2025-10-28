@@ -140,7 +140,9 @@ class TopologyIterator:
                 )
                 vertex_prototypes.append(
                     Node(
-                        id=vertex_id, num_connections=node_type.num_connections
+                        id=vertex_id,
+                        type_id=node_type.type_id,
+                        num_connections=node_type.num_connections,
                     )
                 )
 
@@ -186,8 +188,8 @@ class TopologyIterator:
 
         # Check that graph for isomorphism with other graphs.
         passed_iso = True
-        for tcc in combinations_passed:
-            test_graph = TopologyCode(tcc).get_graph()
+        for idx, tcc in enumerate(combinations_passed):
+            test_graph = TopologyCode(idx, tcc).get_graph()
 
             if rx.is_isomorphic(current_graph, test_graph):
                 passed_iso = False
@@ -226,7 +228,10 @@ class TopologyIterator:
                 msg = "could not split edge into two equal sets"
                 raise ValueError(msg) from exc
 
-            topology_code = TopologyCode(combination)
+            topology_code = TopologyCode(
+                idx=len(combinations_passed),
+                vertex_map=combination,
+            )
             if self._passes_tests(
                 topology_code=topology_code,
                 combinations_tested=combinations_tested,
@@ -277,7 +282,10 @@ class TopologyIterator:
                 for i, j in zip(const, options, strict=True)
             ]
 
-            topology_code = TopologyCode(combination)
+            topology_code = TopologyCode(
+                idx=len(combinations_passed),
+                vertex_map=combination,
+            )
             if self._passes_tests(
                 topology_code=topology_code,
                 combinations_tested=combinations_tested,
@@ -339,7 +347,10 @@ class TopologyIterator:
                 for i, j in zip(itera1, mixed_options, strict=True)
             ]
 
-            topology_code = TopologyCode(combination)
+            topology_code = TopologyCode(
+                idx=len(combinations_passed),
+                vertex_map=combination,
+            )
             if self._passes_tests(
                 topology_code=topology_code,
                 combinations_tested=combinations_tested,
@@ -396,8 +407,8 @@ class TopologyIterator:
     def count_graphs(self) -> int:
         """Count completely connected graphs in iteration."""
         count = 0
-        for combination in self._define_graphs():
-            topology_code = TopologyCode(combination)
+        for idx, combination in enumerate(self._define_graphs()):
+            topology_code = TopologyCode(idx=idx, vertex_map=combination)
 
             num_components = topology_code.get_number_connected_components()
             if num_components == self.allowed_num_components:
@@ -410,8 +421,8 @@ class TopologyIterator:
 
         Yields only completely connected graphs.
         """
-        for combination in self._define_graphs():
-            topology_code = TopologyCode(combination)
+        for idx, combination in enumerate(self._define_graphs()):
+            topology_code = TopologyCode(idx=idx, vertex_map=combination)
 
             num_components = topology_code.get_number_connected_components()
             if num_components == self.allowed_num_components:
