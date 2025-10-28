@@ -2,8 +2,6 @@
   `andrewtarzia <https://github.com/andrewtarzia/>`_
 :documentation: https://agx.readthedocs.io/en/latest/
 
-.. figure:: docs/source/_static/logo.png
-
 
 Overview
 ========
@@ -41,7 +39,7 @@ Usage
 =====
 
 Examples of usage can be seen in
-`cgexplore <https://github.com/andrewtarzia/CGExplore>`_.
+`cgexplore <https://cgexplore.readthedocs.io/en/latest/>`_.
 
 How To Cite
 ===========
