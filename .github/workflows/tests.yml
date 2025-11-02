@@ -17,7 +17,7 @@ jobs:
               with:
                   python-version-file: "pyproject.toml"
             - run: uv sync --all-extras --dev
-            - run: uv run ruff check src tests
+            - run: uv run ruff check src tests docs/source/_static/recipes
 
     mypy:
         runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
               with:
                   python-version-file: "pyproject.toml"
             - run: uv sync --all-extras --dev
-            - run: uv run mypy src tests
+            - run: uv run mypy src tests docs/source/_static/recipes
 
     ruff-format:
         runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
               with:
                   python-version-file: "pyproject.toml"
             - run: uv sync --all-extras --dev
-            - run: uv run ruff format --check src tests
+            - run: uv run ruff format --check src tests docs/source/_static/recipes
 
     pytest:
         runs-on: ubuntu-latest
