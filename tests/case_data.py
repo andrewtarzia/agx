@@ -10,7 +10,6 @@ class CaseData:
     """A test case."""
 
     node_counts: dict[agx.NodeType, int]
-    graph_type: str
     graph_set: str
     graph_directory: pathlib.Path
     graph_filename: str

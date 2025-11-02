@@ -16,7 +16,6 @@ bbs = {1, 2, 3, 4}
                 agx.NodeType(type_id=0, num_connections=4): 2,
                 agx.NodeType(type_id=1, num_connections=2): 4,
             },
-            graph_type="2-4FG_4-2FG",
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
@@ -35,7 +34,6 @@ bbs = {1, 2, 3, 4}
                 agx.NodeType(type_id=1, num_connections=2): 3,
                 agx.NodeType(type_id=2, num_connections=2): 3,
             },
-            graph_type="3-4FG_6-2FG",
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
@@ -73,7 +71,6 @@ bbs = {1, 2, 3, 4}
                 agx.NodeType(type_id=0, num_connections=3): 4,
                 agx.NodeType(type_id=1, num_connections=2): 6,
             },
-            graph_type="4-3FG_6-2FG",
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
@@ -88,7 +85,6 @@ bbs = {1, 2, 3, 4}
         ),
         lambda name: CaseData(
             node_counts={agx.NodeType(type_id=0, num_connections=4): 5},
-            graph_type="5-4FG",
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
@@ -107,7 +103,6 @@ bbs = {1, 2, 3, 4}
                 agx.NodeType(type_id=1, num_connections=2): 2,
                 agx.NodeType(type_id=2, num_connections=1): 2,
             },
-            graph_type="2-3FG_2-2FG_2-1FG",
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
@@ -126,7 +121,6 @@ bbs = {1, 2, 3, 4}
                 agx.NodeType(type_id=1, num_connections=3): 3,
                 agx.NodeType(type_id=2, num_connections=3): 1,
             },
-            graph_type="3-4FG_4-3FG",
             graph_set="rxx",
             graph_directory=pathlib.Path(__file__).resolve().parent
             / "temp_graphs",
