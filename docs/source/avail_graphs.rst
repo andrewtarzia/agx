@@ -119,7 +119,7 @@ Generated with code:
 
             if iterator.graph_type in knowns:
                 assert (
-                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json"
+                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json.gz"
                 ).exists()
 
         except (ZeroDivisionError, ValueError):
@@ -224,7 +224,7 @@ Generated with code:
 
             if iterator.graph_type in knowns:
                 assert (
-                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json"
+                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json.gz"
                 ).exists()
 
         except (ZeroDivisionError, ValueError):
@@ -342,7 +342,7 @@ Generated with code:
 
             if iterator.graph_type in knowns:
                 assert (
-                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json"
+                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json.gz"
                 ).exists()
 
         except (ZeroDivisionError, ValueError):
