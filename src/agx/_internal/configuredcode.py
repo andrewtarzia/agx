@@ -14,13 +14,22 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ConfiguredCode:
-    """Naming convention for topology codes with configurations."""
+    """Naming convention for topology codes with configurations.
+
+    Parameters:
+        topology_code:
+            The graph connecting the nodes.
+
+        configuration:
+            The symmetry, or arrangement of different nodes on the graph.
+
+    """
 
     topology_code: TopologyCode
     configuration: Configuration
 
     def get_graph(self) -> rx.PyGraph:
-        """Convert TopologyCode and BBConfig to rx graph."""
+        """Convert TopologyCode and Configuration to rx graph."""
         graph: rx.PyGraph = rx.PyGraph(multigraph=True)
 
         vertices = {}

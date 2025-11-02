@@ -26,51 +26,33 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class TopologyIterator:
-    """Iterate over topology graphs.
-
-    This is the latest version, but without good symmetry and graph checks,
-    this can over produce structures.
+    """Iterate over graphs.
 
     .. important::
 
-      **Warning**: Currently, the order of ``building_block_counts`` has to
-      have the building block with the most FGs first! This ordering is defined
-      by the order used when defining the graphs. If you are defining your own
-      graph library (i.e., setting ``graph_directory`` or using a new
-      ``graph_type``), then the order is defined by the order in
-      ``building_block_counts`` when generating the json.
-
-    .. important::
-
-      To reproduce the ``no_doubles'' dataset, you must use
-      ``graph_set=rx_nodoubles``, or filter the topology codes after
-      generation using the :class:`agx.TopologyCode` methods
-      (this is now the recommended approach).
+      **Warning**: Currently, the order of ``node_counts`` has to
+      have the building block with the most connections first!
 
     Parameters:
-        building_block_counts:
-            Dictionary of :class:`stk.BuildingBlock` and their count in the
-            proposed structures. Always put the building blocks with more
-            functional groups first (this is a current bug). Additionally, only
-            mixtures of three distinct building block functional group counts
-            is implemented, and in the case of three components, all building
-            blocks bind to the building block with the most functional groups.
+        node_counts:
+            Dictionary of :class:`agx.NodeType` and their count in the
+            proposed graphs. Always put the building blocks with more
+            functional groups first. Additionally, only mixtures of three
+            distinct node types (in terms of connection counts) are
+            implemented, and in the case of three components, all nodes connect
+            to the node type with the most connections.
 
         graph_type:
-            Name of the graph. Current name convention is long, but complete,
-            capturing the count of each building block with certain functional
-            group count included. Following this name convention will allow you
-            to use saved graphs, if not, you can make your own. Although it can
-            be time consuming.
+            Name of the graph. If you do not need a custom graph, you can leave
+            this as ``None`` and it will adhere to the current name convention
+            (see ``available_graphs``), which captures the count of each node
+            type with certain number of connections. Following this name
+            convention will allow you to use saved graphs, if not, you can make
+            your own. Although it can be time consuming.
 
         graph_set:
             Set of graphs to use based on different algorithms or papers.
-            Can be custom, as above. Note that the code to generation ``nx``
-            graphs is no longer present in ``cgexplore`` because the
-            :mod:`networkx` algorithms were slow.
-
-        scale_multiplier:
-            Scale multiplier to use in construction.
+            Only the new ``rxx`` set are defined here.
 
         allowed_num_components:
             Allowed number of disconnected graph components. Usually ``1`` to
@@ -79,8 +61,8 @@ class TopologyIterator:
         max_samples:
             When constructing graphs, there is some randomness in their order,
             although that order should be consistent, and only up-to
-            ``max_samples`` are sampled. For very large numbers of building
-            blocks there is not guarantee all possible graphs will be explored.
+            ``max_samples`` are sampled. For very large numbers of components
+            there is not guarantee all possible graphs will be explored.
 
         graph_directory:
             Directory to check for and save graph jsons.
@@ -88,15 +70,17 @@ class TopologyIterator:
     """
 
     node_counts: dict[NodeType, int]
-    graph_type: str
+    graph_type: str | None = None
     graph_set: str = "rxx"
-    scale_multiplier = 5
     allowed_num_components: int = 1
     max_samples: int | None = None
     graph_directory: pathlib.Path | None = None
 
     def __post_init__(self) -> None:
         """Initialize."""
+        if self.graph_type is None:
+            self.graph_type = self.generate_graph_type()
+
         if self.graph_directory is None:
             self.graph_directory = (
                 pathlib.Path(__file__).resolve().parent / "known_graphs"
@@ -158,6 +142,18 @@ class TopologyIterator:
         self.vertex_counts = {
             i.id: i.num_connections for i in vertex_prototypes
         }
+
+    def generate_graph_type(self) -> str:
+        """Get the graph type to match the new naming convention."""
+        fgcounts: dict[int, int] = defaultdict(int)
+        for nodetype, count in self.node_counts.items():
+            fgcounts[nodetype.num_connections] += count
+
+        string = ""
+        for fgtype, fgnum in sorted(fgcounts.items(), reverse=True):
+            string += f"{fgnum}-{fgtype}FG_"
+
+        return string.rstrip("_")
 
     def get_num_nodes(self) -> int:
         """Get number of building blocks."""

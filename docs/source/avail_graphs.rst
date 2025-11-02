@@ -22,7 +22,7 @@ Graphs:
 
 .. important::
 
-  All new graphs are run with a ``max_samples`` of 1e7.
+  All new graphs are run with a ``max_samples`` of 1e6.
 
 Filtering graphs
 ^^^^^^^^^^^^^^^^
@@ -43,7 +43,7 @@ Additionally, one might want to build graphs that are not only
 One-type graphs
 ^^^^^^^^^^^^^^^
 
-Produced graphs for ``m`` in (1 - 10) with FGs in (1 - 4).
+Produced graphs for ``m`` in (1 - 11) with FGs in (1 - 5).
 Generated with code:
 
 .. code-block:: python
@@ -57,7 +57,6 @@ Generated with code:
                 node_counts={
                     agx.NodeType(type_id=0, num_connections=fgnum): midx,
                 },
-                graph_type=f"{midx}-{fgnum}FG",
                 graph_set="rxx",
             )
             logger.info(
@@ -111,12 +110,10 @@ Generated with code:
     multipliers = range(1, 11)
     for midx, fgnum in it.product(multipliers, bbs):
         try:
-            string = f"{midx}-{fgnum}FG"
             iterator = agx.TopologyIterator(
                 node_counts={
                     agx.NodeType(type_id=0, num_connections=fgnum): midx,
                 },
-                graph_type=f"{midx}-{fgnum}FG",
                 graph_set="rxx",
             )
 
@@ -131,8 +128,9 @@ Generated with code:
 Two-type graphs
 ^^^^^^^^^^^^^^^
 
-Produced graphs for ``m`` in (1 - 12) with FGs in (1 - 4) and
-stoichiometries of ``bigger``:``smaller`` (in terms of FGs): 1:2, 2:3, 3:4.
+Produced graphs for ``m`` in (1 - 12) with FGs in (1 - 5) and
+a combinatorial set of stoichiometries of ``bigger``:``smaller``.
+We limit the multiplier for stoichiometries other than 1:2.
 Generated with code:
 
 .. code-block:: python
@@ -142,7 +140,7 @@ Generated with code:
     # Two typers.
     multipliers = range(1, 13)
     two_type_stoichiometries = tuple(
-        (i, j) for i, j in it.product((1, 2, 3, 4), repeat=2)
+        (i, j) for i, j in it.product((1, 2, 3, 4, 5), repeat=2)
     )
     for midx, fgnum1, fgnum2, stoich in it.product(
         multipliers, bbs, bbs, two_type_stoichiometries
@@ -151,14 +149,16 @@ Generated with code:
             continue
 
         # Do not do all for larger stoichiomers.
-        if stoich in ((2, 3), (3, 4)) and midx > 4:  # noqa: PLR2004
+        if stoich not in ((1, 2), ) and midx > 4:  # noqa: PLR2004
             continue
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
         try:
-            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
-            f"{midx * stoich[1]}-{fgnum2_}FG_"
+            string = (
+                f"{midx * stoich[0]}-{fgnum1_}FG_"
+                f"{midx * stoich[1]}-{fgnum2_}FG"
+            )
             logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
                 node_counts={
@@ -167,8 +167,6 @@ Generated with code:
                     agx.NodeType(type_id=1, num_connections=fgnum2_): midx
                     * stoich[1],
                 },
-                graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG",
                 graph_set="rxx",
             )
             logger.info(
@@ -199,7 +197,7 @@ Generated with code:
     # Two typers.
     multipliers = range(1, 13)
     two_type_stoichiometries = tuple(
-        (i, j) for i, j in it.product((1, 2, 3, 4), repeat=2)
+        (i, j) for i, j in it.product((1, 2, 3, 4, 5), repeat=2)
     )
     for midx, fgnum1, fgnum2, stoich in it.product(
         multipliers, bbs, bbs, two_type_stoichiometries
@@ -208,14 +206,12 @@ Generated with code:
             continue
 
         # Do not do all for larger stoichiomers.
-        if stoich in ((2, 3), (3, 4)) and midx > 4:  # noqa: PLR2004
+        if stoich not in ((1, 2),) and midx > 4:  # noqa: PLR2004
             continue
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
         try:
-            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
-            f"{midx * stoich[1]}-{fgnum2_}FG_"
             iterator = agx.TopologyIterator(
                 node_counts={
                     agx.NodeType(type_id=0, num_connections=fgnum1_): midx
@@ -223,8 +219,6 @@ Generated with code:
                     agx.NodeType(type_id=1, num_connections=fgnum2_): midx
                     * stoich[1],
                 },
-                graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG",
                 graph_set="rxx",
             )
 
@@ -251,7 +245,7 @@ Generated with code:
     # Three typers.
     multipliers = (1, 2)
     three_type_stoichiometries = tuple(
-        (i, j, k) for i, j, k in it.product((1, 2, 3, 4), repeat=3)
+        (i, j, k) for i, j, k in it.product((1, 2, 3, 4, 5), repeat=3)
     )
     for midx, fgnum1, fgnum2, fgnum3, stoich in it.product(
         multipliers, bbs, bbs, bbs, three_type_stoichiometries
@@ -263,9 +257,11 @@ Generated with code:
         )
 
         try:
-            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
-            f"{midx * stoich[1]}-{fgnum2_}FG_"
-            f"{midx * stoich[2]}-{fgnum3_}FG"
+            string = (
+                f"{midx * stoich[0]}-{fgnum1_}FG_"
+                f"{midx * stoich[1]}-{fgnum2_}FG_"
+                f"{midx * stoich[2]}-{fgnum3_}FG"
+            )
             logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
                 node_counts={
@@ -276,9 +272,6 @@ Generated with code:
                     agx.NodeType(type_id=2, num_connections=fgnum3_): midx
                     * stoich[2],
                 },
-                graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG_"
-                f"{midx * stoich[2]}-{fgnum3_}FG",
                 graph_set="rxx",
             )
             logger.info(
@@ -323,7 +316,7 @@ Generated with code:
     # Three typers.
     multipliers = (1, 2)
     three_type_stoichiometries = tuple(
-        (i, j, k) for i, j, k in it.product((1, 2, 3, 4), repeat=3)
+        (i, j, k) for i, j, k in it.product((1, 2, 3, 4, 5), repeat=3)
     )
     for midx, fgnum1, fgnum2, fgnum3, stoich in it.product(
         multipliers, bbs, bbs, bbs, three_type_stoichiometries
@@ -335,9 +328,6 @@ Generated with code:
         )
 
         try:
-            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
-            f"{midx * stoich[1]}-{fgnum2_}FG_"
-            f"{midx * stoich[2]}-{fgnum3_}FG"
             iterator = agx.TopologyIterator(
                 node_counts={
                     agx.NodeType(type_id=0, num_connections=fgnum1_): midx
@@ -347,9 +337,6 @@ Generated with code:
                     agx.NodeType(type_id=2, num_connections=fgnum3_): midx
                     * stoich[2],
                 },
-                graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG_"
-                f"{midx * stoich[2]}-{fgnum3_}FG",
                 graph_set="rxx",
             )
 

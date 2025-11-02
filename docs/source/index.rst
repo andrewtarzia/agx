@@ -4,6 +4,8 @@
    :maxdepth: 1
 
    Graphs <graphs>
+   Available graphs <avail_graphs>
+   Recipes <recipes>
    Utilities <utilities>
 
 .. toctree::
@@ -12,10 +14,6 @@
   :caption: Modules:
 
   Modules <modules>
-
-.. tip::
-
-  ⭐ Star us on `GitHub <https://www.github.com/andrewtarzia/agx>`_! ⭐
 
 ============
 Introduction
@@ -31,6 +29,12 @@ of structure prediction.
 
   **Warning**: This package is still very much underdevelopment and many changes
   are expected.
+
+
+.. tip::
+
+  ⭐ Star us on `GitHub <https://www.github.com/andrewtarzia/agx>`_! ⭐
+
 
 Installation
 ============
