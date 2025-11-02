@@ -18,7 +18,6 @@ def test_layouts(
 
     iterator = agx.TopologyIterator(
         node_counts=graph_data.node_counts,
-        graph_type=graph_data.graph_type,
         max_samples=graph_data.max_samples,
         # Use known graphs.
         graph_directory=pathlib.Path(__file__).resolve().parent
@@ -28,7 +27,7 @@ def test_layouts(
     for tc in iterator.yield_graphs():
         vs_name = (
             known_mols
-            / f"vs_{graph_data.graph_type}_{tc.idx}_{layout_type}_{scale}.npy"
+            / f"vs_{iterator.graph_type}_{tc.idx}_{layout_type}_{scale}.npy"
         )
 
         if not vs_name.exists():

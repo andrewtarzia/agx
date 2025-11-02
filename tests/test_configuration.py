@@ -22,7 +22,6 @@ def test_configuration(graph_data: CaseData) -> None:
 
     iterator = agx.TopologyIterator(
         node_counts=graph_data.node_counts,
-        graph_type=graph_data.graph_type,
         max_samples=graph_data.max_samples,
         # Use known graphs.
         graph_directory=graph_directory,
@@ -57,7 +56,7 @@ def test_configuration(graph_data: CaseData) -> None:
                 run_topology_codes.append(configured_code)
 
             bc_name = (
-                config_directory / f"bc_{graph_data.graph_type}_"
+                config_directory / f"bc_{iterator.graph_type}_"
                 f"{configured_code.topology_code.idx}_"
                 f"{configured_code.configuration.idx}.txt"
             )

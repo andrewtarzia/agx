@@ -21,7 +21,6 @@ def test_topology_code_nxgraph(graph_data: CaseData) -> None:
     graph_directory = pathlib.Path(__file__).resolve().parent / "test_graphs"
     iterator = agx.TopologyIterator(
         node_counts=graph_data.node_counts,
-        graph_type=graph_data.graph_type,
         max_samples=graph_data.max_samples,
         # Use known graphs.
         graph_directory=graph_directory,
@@ -29,7 +28,7 @@ def test_topology_code_nxgraph(graph_data: CaseData) -> None:
 
     for tc in iterator.yield_graphs():
         nxgml_file = (
-            graph_directory / f"nx_{graph_data.graph_type}_{tc.idx}.gml.gz"
+            graph_directory / f"nx_{iterator.graph_type}_{tc.idx}.gml.gz"
         )
         if not nxgml_file.exists():
             nx.write_gml(tc.get_nx_graph(), nxgml_file)
@@ -57,16 +56,13 @@ def test_topology_code_rxgraph(graph_data: CaseData) -> None:
     graph_directory = pathlib.Path(__file__).resolve().parent / "test_graphs"
     iterator = agx.TopologyIterator(
         node_counts=graph_data.node_counts,
-        graph_type=graph_data.graph_type,
         max_samples=graph_data.max_samples,
         # Use known graphs.
         graph_directory=graph_directory,
     )
 
     for tc in iterator.yield_graphs():
-        rxgml_file = (
-            graph_directory / f"rx_{graph_data.graph_type}_{tc.idx}.gml"
-        )
+        rxgml_file = graph_directory / f"rx_{iterator.graph_type}_{tc.idx}.gml"
         if not rxgml_file.exists():
             rx.write_graphml(tc.get_graph(), str(rxgml_file))
 
@@ -82,7 +78,7 @@ def test_topology_code_rxgraph(graph_data: CaseData) -> None:
         )
 
         rxgml_file = (
-            graph_directory / f"rxw_{graph_data.graph_type}_{tc.idx}.gml"
+            graph_directory / f"rxw_{iterator.graph_type}_{tc.idx}.gml"
         )
         if not rxgml_file.exists():
             rx.write_graphml(tc.get_weighted_graph(), str(rxgml_file))
@@ -110,16 +106,13 @@ def test_topology_code_as_string(graph_data: CaseData) -> None:
     graph_directory = pathlib.Path(__file__).resolve().parent / "test_graphs"
     iterator = agx.TopologyIterator(
         node_counts=graph_data.node_counts,
-        graph_type=graph_data.graph_type,
         max_samples=graph_data.max_samples,
         # Use known graphs.
         graph_directory=graph_directory,
     )
 
     for tc in iterator.yield_graphs():
-        str_file = (
-            graph_directory / f"str_{graph_data.graph_type}_{tc.idx}.txt"
-        )
+        str_file = graph_directory / f"str_{iterator.graph_type}_{tc.idx}.txt"
         if not str_file.exists():
             with str_file.open("w") as f:
                 f.write(tc.get_as_string())
@@ -142,7 +135,6 @@ def test_topology_code_components(graph_data: CaseData) -> None:
     graph_directory = pathlib.Path(__file__).resolve().parent / "test_graphs"
     iterator = agx.TopologyIterator(
         node_counts=graph_data.node_counts,
-        graph_type=graph_data.graph_type,
         max_samples=graph_data.max_samples,
         # Use known graphs.
         graph_directory=graph_directory,
@@ -164,7 +156,6 @@ def test_topology_code_doubles(graph_data: CaseData) -> None:
     graph_directory = pathlib.Path(__file__).resolve().parent / "test_graphs"
     iterator = agx.TopologyIterator(
         node_counts=graph_data.node_counts,
-        graph_type=graph_data.graph_type,
         max_samples=graph_data.max_samples,
         # Use known graphs.
         graph_directory=graph_directory,
