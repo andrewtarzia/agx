@@ -24,7 +24,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx_copybutton",
     "moldoc",
-    "chemiscope.sphinx",
 ]
 
 autosummary_imported_members = True
@@ -55,5 +54,5 @@ html_theme_options = {}
 
 moldoc_default_molecule_config = molecule.MoleculeConfig(
     background_color=molecule.Color(32, 32, 32),
-    atom_scale=0.2,
+    atom_scale=0.8,
 )
