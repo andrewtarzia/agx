@@ -30,7 +30,6 @@ def one_type_function() -> None:
                 node_counts={
                     agx.NodeType(type_id=0, num_connections=fgnum): midx,
                 },
-                graph_type=f"{midx}-{fgnum}FG",
                 graph_set="rxx",
             )
             logger.info(
@@ -47,7 +46,7 @@ def two_type_function() -> None:
     # Two typers.
     multipliers = range(1, 13)
     two_type_stoichiometries = tuple(
-        (i, j) for i, j in it.product((1, 2, 3, 4), repeat=2)
+        (i, j) for i, j in it.product((1, 2, 3, 4, 5), repeat=2)
     )
     for midx, fgnum1, fgnum2, stoich in it.product(
         multipliers, bbs, bbs, two_type_stoichiometries
@@ -56,14 +55,16 @@ def two_type_function() -> None:
             continue
 
         # Do not do all for larger stoichiomers.
-        if stoich in ((2, 3), (3, 4)) and midx > 4:  # noqa: PLR2004
+        if stoich not in ((1, 2),) and midx > 4:  # noqa: PLR2004
             continue
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
         try:
-            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
-            f"{midx * stoich[1]}-{fgnum2_}FG_"
+            string = (
+                f"{midx * stoich[0]}-{fgnum1_}FG_"
+                f"{midx * stoich[1]}-{fgnum2_}FG"
+            )
             logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
                 node_counts={
@@ -72,8 +73,6 @@ def two_type_function() -> None:
                     agx.NodeType(type_id=1, num_connections=fgnum2_): midx
                     * stoich[1],
                 },
-                graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG",
                 graph_set="rxx",
             )
             logger.info(
@@ -90,7 +89,7 @@ def three_type_function() -> None:
     # Three typers.
     multipliers = (1, 2)
     three_type_stoichiometries = tuple(
-        (i, j, k) for i, j, k in it.product((1, 2, 3, 4), repeat=3)
+        (i, j, k) for i, j, k in it.product((1, 2, 3, 4, 5), repeat=3)
     )
     for midx, fgnum1, fgnum2, fgnum3, stoich in it.product(
         multipliers, bbs, bbs, bbs, three_type_stoichiometries
@@ -102,9 +101,11 @@ def three_type_function() -> None:
         )
 
         try:
-            string = f"{midx * stoich[0]}-{fgnum1_}FG_"
-            f"{midx * stoich[1]}-{fgnum2_}FG_"
-            f"{midx * stoich[2]}-{fgnum3_}FG"
+            string = (
+                f"{midx * stoich[0]}-{fgnum1_}FG_"
+                f"{midx * stoich[1]}-{fgnum2_}FG_"
+                f"{midx * stoich[2]}-{fgnum3_}FG"
+            )
             logger.info("trying %s", string)
             iterator = agx.TopologyIterator(
                 node_counts={
@@ -115,9 +116,6 @@ def three_type_function() -> None:
                     agx.NodeType(type_id=2, num_connections=fgnum3_): midx
                     * stoich[2],
                 },
-                graph_type=f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG_"
-                f"{midx * stoich[2]}-{fgnum3_}FG",
                 graph_set="rxx",
             )
             logger.info(
@@ -133,9 +131,9 @@ def main() -> None:
 
     if args.type == "one":
         one_type_function()
-    elif args.type == "one":
+    elif args.type == "two":
         two_type_function()
-    elif args.type == "one":
+    elif args.type == "three":
         three_type_function()
     else:
         msg = f"{args.type} type cannot be done so far"

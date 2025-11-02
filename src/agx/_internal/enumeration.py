@@ -156,7 +156,7 @@ class TopologyIterator:
         return string.rstrip("_")
 
     def get_num_nodes(self) -> int:
-        """Get number of building blocks."""
+        """Get number of nodes."""
         return len(self.vertex_prototypes)
 
     def get_vertex_prototypes(self) -> abc.Sequence[Node]:
@@ -419,7 +419,7 @@ class TopologyIterator:
     def yield_graphs(self) -> abc.Generator[TopologyCode]:
         """Get constructed molecules from iteration.
 
-        Yields only completely connected graphs.
+        Yields only graphs with the allowed number of components.
         """
         for idx, combination in enumerate(self._define_graphs()):
             topology_code = TopologyCode(idx=idx, vertex_map=combination)
