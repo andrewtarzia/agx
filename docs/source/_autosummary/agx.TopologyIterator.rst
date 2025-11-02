@@ -18,6 +18,7 @@ agx.TopologyIterator
       :nosignatures:
    
       ~TopologyIterator.count_graphs
+      ~TopologyIterator.generate_graph_type
       ~TopologyIterator.get_configurations
       ~TopologyIterator.get_num_nodes
       ~TopologyIterator.get_vertex_prototypes
@@ -35,9 +36,8 @@ agx.TopologyIterator
       ~TopologyIterator.allowed_num_components
       ~TopologyIterator.graph_directory
       ~TopologyIterator.graph_set
-      ~TopologyIterator.max_samples
-      ~TopologyIterator.scale_multiplier
-      ~TopologyIterator.node_counts
       ~TopologyIterator.graph_type
+      ~TopologyIterator.max_samples
+      ~TopologyIterator.node_counts
    
    
