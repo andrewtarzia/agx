@@ -28,7 +28,7 @@ dev = [
     "twine",
     "sphinx_rtd_theme",
     "furo",
-    "chemiscope>0.7.3",
+    "matplotlib",
     "moldoc",
 ]
 
