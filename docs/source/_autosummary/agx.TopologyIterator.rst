@@ -38,6 +38,7 @@ agx.TopologyIterator
       ~TopologyIterator.graph_set
       ~TopologyIterator.graph_type
       ~TopologyIterator.max_samples
+      ~TopologyIterator.verbose
       ~TopologyIterator.node_counts
    
    
