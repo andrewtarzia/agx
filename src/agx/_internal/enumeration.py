@@ -67,6 +67,9 @@ class TopologyIterator:
         graph_directory:
             Directory to check for and save graph jsons.
 
+        verbose:
+            Whether to log outcomes.
+
     """
 
     node_counts: dict[NodeType, int]
@@ -75,6 +78,7 @@ class TopologyIterator:
     allowed_num_components: int = 1
     max_samples: int | None = None
     graph_directory: pathlib.Path | None = None
+    verbose: bool = True
 
     def __post_init__(self) -> None:
         """Initialize."""
@@ -242,7 +246,7 @@ class TopologyIterator:
             # Add this anyway, either gets skipped, or adds the new one.
             combinations_tested.add(topology_code.get_as_string())
             # Progress.
-            if i % 10000 == 0:
+            if i % 10000 == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -297,7 +301,7 @@ class TopologyIterator:
             combinations_tested.add(topology_code.get_as_string())
 
             # Progress.
-            if i % 10000 == 0:
+            if i % 10000 == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -362,7 +366,7 @@ class TopologyIterator:
             combinations_tested.add(topology_code.get_as_string())
 
             # Progress.
-            if i % 10000 == 0:
+            if i % 10000 == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -385,7 +389,8 @@ class TopologyIterator:
                     f.write(json.dumps(temp).encode("utf8"))
                 raise SystemExit
 
-            logger.info("%s not found, constructing!", self.graph_path)
+            if self.verbose:
+                logger.info("%s not found, constructing!", self.graph_path)
             num_types = len(self.vertex_types_by_conn.keys())
 
             if num_types == 1:
