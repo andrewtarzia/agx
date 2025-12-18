@@ -3,10 +3,10 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "agx"
+name = "agraphx"
 maintainers = [{ name = "Andrew Tarzia", email = "andrew.tarzia@gmail.com" }]
 dependencies = [
-    "numpy<2",
+    "numpy",
     "rustworkx",
     "networkx",
     "scipy",
