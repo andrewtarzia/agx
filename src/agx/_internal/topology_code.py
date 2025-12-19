@@ -114,7 +114,7 @@ class TopologyCode:
         layout_type: str,
         scale: float,
     ) -> dict[int, npt.NDArray[np.float64]]:
-        """Take a graph and genereate from graph vertex positions.
+        """Take a graph and generate a layout from graph vertex positions.
 
         .. important::
 
@@ -147,3 +147,32 @@ class TopologyCode:
             nidx: np.array(nxpos[nidx]) * float(scale)
             for nidx in self.get_nx_graph().nodes
         }
+
+    def contains_xs(self, x: int) -> bool:
+        """True if the graph contains cycles of size x."""
+        print("this may need fixing to match clathrates")
+        weighted_graph = self.get_weighted_graph()
+
+        filtered_paths = set()
+        for node in weighted_graph.nodes():
+            paths = list(
+                rx.graph_all_simple_paths(
+                    weighted_graph,
+                    origin=node,  # type: ignore[call-arg]
+                    to=node,  # type: ignore[call-arg]
+                    cutoff=12,
+                    min_depth=4,
+                )
+            )
+
+            for path in paths:
+                if (
+                    tuple(path) not in filtered_paths
+                    and tuple(path[::-1]) not in filtered_paths
+                ):
+                    filtered_paths.add(tuple(path))
+
+        path_lengths = [len(i) - 1 for i in filtered_paths]
+        counter = Counter(path_lengths)
+
+        return counter[x] != 0

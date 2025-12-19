@@ -6,8 +6,6 @@ import agx
 
 from .case_data import CaseData
 
-bbs = {1, 2, 3, 4}
-
 
 @pytest.fixture(
     params=(
