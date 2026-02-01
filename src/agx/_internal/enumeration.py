@@ -24,6 +24,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+class BuildNotPossibleError(Exception): ...
+
+
 @dataclass
 class TopologyIterator:
     """Iterate over graphs.
@@ -97,6 +100,10 @@ class TopologyIterator:
         self.graph_path = (
             self.graph_directory
             / f"{self.graph_set}_{self.graph_type}.json.gz"
+        )
+        self.restart_path = (
+            self.graph_directory
+            / f"restart_{self.graph_set}_{self.graph_type}.json.gz"
         )
         if self.graph_set == "rxx":
             if self.max_samples is None:
@@ -201,6 +208,36 @@ class TopologyIterator:
 
         return passed_iso
 
+    def _write_restart(
+        self,
+        combinations_passed: list[abc.Sequence[tuple[int, int]]],
+        step: int,
+    ) -> None:
+        dictionary = {
+            "combos": combinations_passed,
+            "step": step,
+        }
+        with gzip.open(str(self.restart_path), "w", 9) as f:
+            f.write(json.dumps(dictionary).encode("utf8"))
+
+    def _load_restart(self) -> tuple[list[abc.Sequence[tuple[int, int]]], int]:
+        with gzip.open(str(self.restart_path), "r", 9) as f:
+            dictionary = json.load(f)
+            return dictionary["combos"], dictionary["step"]
+
+    def _delete_restart(self) -> None:
+        if self.restart_path.exists():
+            self.restart_path.unlink()
+
+    def _one_type_possible(self) -> bool:
+        type1 = next(iter(set(self.vertex_types_by_conn.keys())))
+        options = [
+            i
+            for i in self.reactable_vertex_ids
+            if i in self.vertex_types_by_conn[type1]
+        ]
+        return len(options) % 2 == 0
+
     def _one_type_algorithm(self) -> None:
         # All combinations tested.
         combinations_tested: set[str] = set()
@@ -216,9 +253,18 @@ class TopologyIterator:
             if i in self.vertex_types_by_conn[type1]
         ]
 
+        step = 0
+        if self.restart_path.exists():
+            combinations_passed, step = self._load_restart()
+            logger.info("loaded restart file, skipping to %s", step)
+
         for i in range(self.used_samples):
             # Shuffle.
             rng.shuffle(options)
+
+            if i <= step:
+                continue
+
             # Split in half.
             half1 = options[: len(options) // 2]
             half2 = options[len(options) // 2 :]
@@ -254,9 +300,28 @@ class TopologyIterator:
                     round((i / self.used_samples) * 100, 1),
                     len(combinations_passed),
                 )
+                self._write_restart(combinations_passed, i)
 
         with gzip.open(str(self.graph_path), "w", 9) as f:
             f.write(json.dumps(combinations_passed).encode("utf8"))
+
+        self._delete_restart()
+
+    def _two_type_possible(self) -> bool:
+        type1, type2 = sorted(self.vertex_types_by_conn.keys(), reverse=True)
+
+        const = [
+            i
+            for i in self.reactable_vertex_ids
+            if i in self.vertex_types_by_conn[type1]
+        ]
+
+        options = [
+            i
+            for i in self.reactable_vertex_ids
+            if i in self.vertex_types_by_conn[type2]
+        ]
+        return len(const) == len(options)
 
     def _two_type_algorithm(self) -> None:
         # All combinations tested.
@@ -278,8 +343,18 @@ class TopologyIterator:
             for i in self.reactable_vertex_ids
             if i in self.vertex_types_by_conn[type2]
         ]
+
+        step = 0
+        if self.restart_path.exists():
+            combinations_passed, step = self._load_restart()
+            logger.info("loaded restart file, skipping to %s", step)
+
         for i in range(self.used_samples):
             rng.shuffle(options)
+
+            if i <= step:
+                continue
+
             # Build an edge selection.
             combination: abc.Sequence[tuple[int, int]] = [
                 tuple(sorted((i, j)))  # type:ignore[misc]
@@ -309,9 +384,36 @@ class TopologyIterator:
                     round((i / self.used_samples) * 100, 1),
                     len(combinations_passed),
                 )
+                self._write_restart(combinations_passed, i)
 
         with gzip.open(str(self.graph_path), "w", 9) as f:
             f.write(json.dumps(combinations_passed).encode("utf8"))
+
+        self._delete_restart()
+
+    def _three_type_possible(self) -> bool:
+        type1, type2, type3 = sorted(
+            self.vertex_types_by_conn.keys(), reverse=True
+        )
+
+        itera1 = [
+            i
+            for i in self.reactable_vertex_ids
+            if i in self.vertex_types_by_conn[type1]
+        ]
+
+        options1 = [
+            i
+            for i in self.reactable_vertex_ids
+            if i in self.vertex_types_by_conn[type2]
+        ]
+        options2 = [
+            i
+            for i in self.reactable_vertex_ids
+            if i in self.vertex_types_by_conn[type3]
+        ]
+        mixed_options = options1 + options2
+        return len(itera1) == len(mixed_options)
 
     def _three_type_algorithm(self) -> None:
         # All combinations tested.
@@ -340,10 +442,19 @@ class TopologyIterator:
             for i in self.reactable_vertex_ids
             if i in self.vertex_types_by_conn[type3]
         ]
+
+        step = 0
+        if self.restart_path.exists():
+            combinations_passed, step = self._load_restart()
+            logger.info("loaded restart file, skipping to %s", step)
+
         for i in range(self.used_samples):
             # Merging options1 and options2 because they both bind to itera.
             mixed_options = options1 + options2
             rng.shuffle(mixed_options)
+
+            if i <= step:
+                continue
 
             # Build an edge selection.
             combination: abc.Sequence[tuple[int, int]] = [
@@ -374,37 +485,55 @@ class TopologyIterator:
                     round((i / self.used_samples) * 100, 1),
                     len(combinations_passed),
                 )
+                self._write_restart(combinations_passed, i)
 
         with gzip.open(str(self.graph_path), "w", 9) as f:
             f.write(json.dumps(combinations_passed).encode("utf8"))
 
-    def _define_graphs(self) -> list[list[tuple[int, int]]]:
-        if not self.graph_path.exists():
-            # Check if .json exists.
-            new_graph = self.graph_path.with_suffix("")
-            if new_graph.exists():
-                with new_graph.open("r") as f:
-                    temp = json.load(f)
-                with gzip.open(str(self.graph_path), "w", 9) as f:
-                    f.write(json.dumps(temp).encode("utf8"))
-                raise SystemExit
+        self._delete_restart()
 
-            if self.verbose:
-                logger.info("%s not found, constructing!", self.graph_path)
-            num_types = len(self.vertex_types_by_conn.keys())
+    def is_type_possible(self) -> bool:
+        """Return `True` if the graph is chemically possible."""
+        num_types = len(self.vertex_types_by_conn.keys())
+        if num_types == 1:
+            return self._one_type_possible()
+        if num_types == 2:  # noqa: PLR2004
+            return self._two_type_possible()
+        if num_types == 3:  # noqa: PLR2004
+            return self._three_type_possible()
+        msg = "Not implemented for mixtures of more than 3 distinct FG numbers"
+        raise RuntimeError(msg)
 
-            if num_types == 1:
+    def _build(self) -> None:
+        num_types = len(self.vertex_types_by_conn.keys())
+        if num_types == 1:
+            if self._one_type_possible():
                 self._one_type_algorithm()
-            elif num_types == 2:  # noqa: PLR2004
+            else:
+                raise BuildNotPossibleError
+        elif num_types == 2:  # noqa: PLR2004
+            if self._two_type_possible():
                 self._two_type_algorithm()
-            elif num_types == 3:  # noqa: PLR2004
+            else:
+                raise BuildNotPossibleError
+        elif num_types == 3:  # noqa: PLR2004
+            if self._three_type_possible():
                 self._three_type_algorithm()
             else:
-                msg = (
-                    "Not implemented for mixtures of more than 3 distinct "
-                    "FG numbers"
-                )
-                raise RuntimeError(msg)
+                raise BuildNotPossibleError
+        else:
+            msg = (
+                "Not implemented for mixtures of more than 3 distinct "
+                "FG numbers"
+            )
+            raise RuntimeError(msg)
+
+    def _define_graphs(self) -> list[list[tuple[int, int]]]:
+        if not self.graph_path.exists():
+            if self.verbose:
+                logger.info("%s not found, constructing!", self.graph_path)
+
+            self._build()
 
         with gzip.open(str(self.graph_path), "r", 9) as f:
             return json.load(f)
