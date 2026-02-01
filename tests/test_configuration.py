@@ -41,7 +41,7 @@ def test_configuration(graph_data: CaseData) -> None:
         run_topology_codes: list[agx.ConfiguredCode] = []
         # Check for iso checks, iterating over topology codes as well.
         for configured_code in iterator.yield_configured_codes():
-            if agx.utilities.is_configured_code_isomoprhic(
+            if agx.utilities.is_configured_code_isomorphic(
                 test_code=configured_code,
                 run_topology_codes=run_topology_codes,
             ):
@@ -49,6 +49,7 @@ def test_configuration(graph_data: CaseData) -> None:
                     configured_code.topology_code.idx,
                     configured_code.configuration.idx,
                 ) in graph_data.iso_pass
+
                 assert graph_data.iso_pass[len(run_topology_codes)] == (
                     configured_code.topology_code.idx,
                     configured_code.configuration.idx,
@@ -76,3 +77,5 @@ def test_configuration(graph_data: CaseData) -> None:
                 str(configured_code.configuration.get_hashable_idx_dict())
                 == test
             )
+
+        assert len(graph_data.iso_pass) == len(run_topology_codes)
