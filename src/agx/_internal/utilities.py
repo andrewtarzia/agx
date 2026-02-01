@@ -8,7 +8,7 @@ from .configuredcode import ConfiguredCode
 logger = logging.getLogger(__name__)
 
 
-def is_configured_code_isomoprhic(
+def is_configured_code_isomorphic(
     test_code: ConfiguredCode,
     run_topology_codes: abc.Sequence[ConfiguredCode],
 ) -> bool:
