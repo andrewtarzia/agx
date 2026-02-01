@@ -144,7 +144,7 @@ def test_topology_code_components(graph_data: CaseData) -> None:
         assert tc.get_number_connected_components() == 1
 
 
-def test_topology_code_doubles(graph_data: CaseData) -> None:
+def test_topology_code_cycle_counts(graph_data: CaseData) -> None:
     """Test topology code methods.
 
     Parameters:
@@ -164,3 +164,6 @@ def test_topology_code_doubles(graph_data: CaseData) -> None:
     for tc in iterator.yield_graphs():
         assert tc.contains_doubles() is graph_data.doubles[tc.idx]
         assert tc.contains_parallels() is graph_data.parallels[tc.idx]
+        assert tc.contains_xs(3) is graph_data.threes[tc.idx]
+        assert tc.contains_xs(4) is graph_data.fours[tc.idx]
+        assert tc.contains_xs(6) is graph_data.sixes[tc.idx]

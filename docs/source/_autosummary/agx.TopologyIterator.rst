@@ -22,6 +22,7 @@ agx.TopologyIterator
       ~TopologyIterator.get_configurations
       ~TopologyIterator.get_num_nodes
       ~TopologyIterator.get_vertex_prototypes
+      ~TopologyIterator.is_type_possible
       ~TopologyIterator.yield_configured_codes
       ~TopologyIterator.yield_graphs
    

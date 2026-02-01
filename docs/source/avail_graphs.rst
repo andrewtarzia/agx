@@ -43,7 +43,7 @@ Additionally, one might want to build graphs that are not only
 One-type graphs
 ^^^^^^^^^^^^^^^
 
-Produced graphs for ``m`` in (1 - 11) with FGs in (1 - 5).
+Produced graphs for ``m`` in (1 - 13) with FGs in (1 - 5).
 Generated with code:
 
 .. code-block:: python
@@ -51,19 +51,19 @@ Generated with code:
     bbs = {1, 2, 3, 4, 5}
     multipliers = range(1, 11)
     for midx, fgnum in it.product(multipliers, bbs):
-        try:
-            string = f"{midx}-{fgnum}FG"
-            iterator = agx.TopologyIterator(
-                node_counts={
-                    agx.NodeType(type_id=0, num_connections=fgnum): midx,
-                },
-                graph_set="rxx",
-            )
+        string = f"{midx}-{fgnum}FG"
+        iterator = agx.TopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum): midx,
+            },
+            graph_set="rxx",
+        )
+        if iterator.is_type_possible():
+            logger.info("trying %s", string)
             logger.info(
                 "graph iteration has %s graphs", iterator.count_graphs()
             )
-        except (ZeroDivisionError, ValueError):
-            pass
+
 
 
 .. testcode:: avail_graphs1-test
@@ -71,59 +71,47 @@ Generated with code:
 
     import itertools as it
     import agx
+    import sys
 
-    knowns = (
-        "8-3FG",
-        "8-4FG",
-        "9-2FG",
-        "9-4FG",
-        "6-4FG",
-        "7-2FG",
-        "7-4FG",
-        "8-1FG",
-        "8-2FG",
-        "2-4FG",
-        "3-2FG",
-        "3-4FG",
-        "4-1FG",
-        "4-2FG",
-        "4-3FG",
-        "4-4FG",
-        "5-2FG",
-        "5-4FG",
-        "6-1FG",
-        "6-2FG",
-        "6-3FG",
-        "1-4FG",
-        "2-1FG",
-        "2-2FG",
-        "2-3FG",
-        "1-2FG",
-        "10-1FG",
-        "10-2FG",
-        "10-3FG",
-        "10-4FG",
-        "11-2FG",
-        "12-1FG",
-    )
     bbs = {1, 2, 3, 4, 5}
-    multipliers = range(1, 11)
+    multipliers = range(1, 13)
+    missing = set()
     for midx, fgnum in it.product(multipliers, bbs):
-        try:
-            iterator = agx.TopologyIterator(
-                node_counts={
-                    agx.NodeType(type_id=0, num_connections=fgnum): midx,
-                },
-                graph_set="rxx",
-            )
+        iterator = agx.TopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum): midx,
+            },
+            graph_set="rxx",
+        )
 
-            if iterator.graph_type in knowns:
-                assert (
-                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json.gz"
-                ).exists()
+        if not iterator.is_type_possible():
+            continue
 
-        except (ZeroDivisionError, ValueError):
-            pass
+        if not (
+            iterator.graph_directory
+            / f"rxx_{iterator.graph_type}.json.gz"
+        ).exists():
+            missing.add(iterator.graph_type)
+
+
+    print(missing, file=sys.stderr)
+    print(len(missing), file=sys.stderr)
+    assert len(missing) == 4
+
+Not all graphs have been built due to cost, or non-valid chemistry.
+
+.. code-block:: python
+
+    # Missing.
+    [
+        '1-1FG', '1-3FG', '1-5FG',
+        '3-1FG', '3-3FG', '3-5FG',
+        '5-1FG', '5-3FG', '5-5FG',
+        '7-1FG', '7-3FG', '7-5FG',
+        '9-1FG', '9-3FG', '9-5FG',
+        '11-1FG', '11-3FG', '11-4FG', '11-5FG',
+        '12-2FG', '12-3FG', '12-4FG', '12-5FG'
+    ]
 
 Two-type graphs
 ^^^^^^^^^^^^^^^
@@ -154,26 +142,25 @@ Generated with code:
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
-        try:
-            string = (
-                f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG"
-            )
+        string = (
+            f"{midx * stoich[0]}-{fgnum1_}FG_"
+            f"{midx * stoich[1]}-{fgnum2_}FG"
+        )
+
+        iterator = agx.TopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                * stoich[0],
+                agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                * stoich[1],
+            },
+            graph_set="rxx",
+        )
+        if iterator.is_type_possible():
             logger.info("trying %s", string)
-            iterator = agx.TopologyIterator(
-                node_counts={
-                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
-                    * stoich[0],
-                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
-                    * stoich[1],
-                },
-                graph_set="rxx",
-            )
             logger.info(
                 "graph iteration has %s graphs", iterator.count_graphs()
             )
-        except (ZeroDivisionError, ValueError):
-            pass
 
 
 .. testcode:: avail_graphs2-test
@@ -181,16 +168,7 @@ Generated with code:
 
     import itertools as it
     import agx
-
-    knowns = (
-        "1-2FG_2-1FG",
-        "1-4FG_2-2FG",
-        "2-2FG_4-1FG",
-        "2-3FG_3-2FG",
-        "2-4FG_4-2FG",
-        "3-4FG_4-3FG",
-        "4-3FG_6-2FG",
-    )
+    import sys
 
     bbs = {1, 2, 3, 4, 5}
 
@@ -199,6 +177,7 @@ Generated with code:
     two_type_stoichiometries = tuple(
         (i, j) for i, j in it.product((1, 2, 3, 4, 5), repeat=2)
     )
+    missing = set()
     for midx, fgnum1, fgnum2, stoich in it.product(
         multipliers, bbs, bbs, two_type_stoichiometries
     ):
@@ -211,24 +190,44 @@ Generated with code:
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
 
-        try:
-            iterator = agx.TopologyIterator(
-                node_counts={
-                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
-                    * stoich[0],
-                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
-                    * stoich[1],
-                },
-                graph_set="rxx",
-            )
+        iterator = agx.TopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                * stoich[0],
+                agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                * stoich[1],
+            },
+            graph_set="rxx",
+        )
 
-            if iterator.graph_type in knowns:
-                assert (
-                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json.gz"
-                ).exists()
+        if not iterator.is_type_possible():
+            continue
 
-        except (ZeroDivisionError, ValueError):
-            pass
+        if not (
+            iterator.graph_directory
+            / f"rxx_{iterator.graph_type}.json.gz"
+        ).exists():
+            missing.add(iterator.graph_type)
+
+    print(missing, file=sys.stderr)
+    print(len(missing), file=sys.stderr)
+    assert len(missing) == 9
+
+
+Not all graphs have been built due to cost, or non-valid chemistry.
+
+.. code-block:: python
+
+    # Missing.
+    [
+        '8-5FG_20-2FG', '8-5FG_10-4FG',
+        '9-5FG_15-3FG', '9-4FG_12-3FG',
+        '12-4FG_16-3FG', '12-5FG_15-4FG','12-5FG_20-3FG', '12-4FG_24-2FG',
+        '16-5FG_20-4FG',
+    ]
+
+
+
 
 Three-type graphs
 ^^^^^^^^^^^^^^^^^
@@ -245,7 +244,7 @@ Generated with code:
     # Three typers.
     multipliers = (1, 2)
     three_type_stoichiometries = tuple(
-        (i, j, k) for i, j, k in it.product((1, 2, 3, 4, 5), repeat=3)
+        (i, j, k) for i, j, k in it.product((1, 2, 3, 4, 5, 6, 7, 8, 9, 10), repeat=3)
     )
     for midx, fgnum1, fgnum2, fgnum3, stoich in it.product(
         multipliers, bbs, bbs, bbs, three_type_stoichiometries
@@ -256,30 +255,31 @@ Generated with code:
             (fgnum1, fgnum2, fgnum3), reverse=True
         )
 
-        try:
-            string = (
-                f"{midx * stoich[0]}-{fgnum1_}FG_"
-                f"{midx * stoich[1]}-{fgnum2_}FG_"
-                f"{midx * stoich[2]}-{fgnum3_}FG"
-            )
+        string = (
+            f"{midx * stoich[0]}-{fgnum1_}FG_"
+            f"{midx * stoich[1]}-{fgnum2_}FG_"
+            f"{midx * stoich[2]}-{fgnum3_}FG"
+        )
+
+        iterator = agx.TopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                * stoich[0],
+                agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                * stoich[1],
+                agx.NodeType(type_id=2, num_connections=fgnum3_): midx
+                * stoich[2],
+            },
+            graph_set="rxx",
+        )
+        logger.info(
+            "graph iteration has %s graphs", iterator.count_graphs()
+        )
+        if iterator.is_type_possible():
             logger.info("trying %s", string)
-            iterator = agx.TopologyIterator(
-                node_counts={
-                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
-                    * stoich[0],
-                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
-                    * stoich[1],
-                    agx.NodeType(type_id=2, num_connections=fgnum3_): midx
-                    * stoich[2],
-                },
-                graph_set="rxx",
-            )
             logger.info(
                 "graph iteration has %s graphs", iterator.count_graphs()
             )
-
-        except (ZeroDivisionError, ValueError):
-            pass
 
 
 .. testcode:: avail_graphs3-test
@@ -287,37 +287,16 @@ Generated with code:
 
     import itertools as it
     import agx
-
-    knowns = (
-        "1-3FG_1-2FG_1-1FG",
-        "1-4FG_1-2FG_2-1FG",
-        "1-4FG_1-3FG_1-1FG",
-        "2-3FG_1-2FG_4-1FG",
-        "2-3FG_2-2FG_2-1FG",
-        "2-4FG_2-2FG_4-1FG",
-        "2-4FG_2-3FG_1-2FG",
-        "2-4FG_2-3FG_2-1FG",
-        "2-4FG_3-2FG_2-1FG",
-        "3-3FG_3-2FG_3-1FG",
-        "3-3FG_4-2FG_1-1FG",
-        "3-4FG_2-3FG_3-2FG",
-        "3-4FG_3-3FG_3-1FG",
-        "3-4FG_4-2FG_4-1FG",
-        "4-3FG_2-2FG_8-1FG",
-        "4-3FG_4-2FG_4-1FG",
-        "4-4FG_4-3FG_2-2FG",
-        "4-4FG_4-3FG_4-1FG",
-        "6-3FG_6-2FG_6-1FG",
-        "6-3FG_8-2FG_2-1FG",
-    )
+    import sys
 
     bbs = {1, 2, 3, 4, 5}
 
     # Three typers.
     multipliers = (1, 2)
     three_type_stoichiometries = tuple(
-        (i, j, k) for i, j, k in it.product((1, 2, 3, 4, 5), repeat=3)
+        (i, j, k) for i, j, k in it.product((1, 2, 3, 4, 5, 6, 7, 8, 9, 10), repeat=3)
     )
+    missing = set()
     for midx, fgnum1, fgnum2, fgnum3, stoich in it.product(
         multipliers, bbs, bbs, bbs, three_type_stoichiometries
     ):
@@ -327,23 +306,51 @@ Generated with code:
             (fgnum1, fgnum2, fgnum3), reverse=True
         )
 
-        try:
-            iterator = agx.TopologyIterator(
-                node_counts={
-                    agx.NodeType(type_id=0, num_connections=fgnum1_): midx
-                    * stoich[0],
-                    agx.NodeType(type_id=1, num_connections=fgnum2_): midx
-                    * stoich[1],
-                    agx.NodeType(type_id=2, num_connections=fgnum3_): midx
-                    * stoich[2],
-                },
-                graph_set="rxx",
-            )
+        iterator = agx.TopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                * stoich[0],
+                agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                * stoich[1],
+                agx.NodeType(type_id=2, num_connections=fgnum3_): midx
+                * stoich[2],
+            },
+            graph_set="rxx",
+        )
 
-            if iterator.graph_type in knowns:
-                assert (
-                    iterator.graph_directory / f"rxx_{iterator.graph_type}.json.gz"
-                ).exists()
+        if not iterator.is_type_possible():
+            continue
 
-        except (ZeroDivisionError, ValueError):
-            pass
+        if not (
+            iterator.graph_directory
+            / f"rxx_{iterator.graph_type}.json.gz"
+        ).exists():
+            missing.add(iterator.graph_type)
+
+    print(missing, file=sys.stderr)
+    print(len(missing), file=sys.stderr)
+    assert len(missing) == 314
+
+Not all graphs have been built due to cost, or non-valid chemistry.
+
+.. code-block:: python
+
+    # Missing.
+    [
+        "3-5FG_3-3FG_3-2FG",
+        "4-5FG_4-4FG_2-2FG", "4-5FG_4-3FG_8-1FG", "4-5FG_8-2FG_4-1FG",
+        "4-5FG_2-4FG_4-3FG", "4-5FG_6-3FG_2-1FG", "4-5FG_2-4FG_6-2FG",
+        "4-5FG_3-4FG_4-2FG", "4-5FG_6-2FG_8-1FG", "4-4FG_2-3FG_5-2FG",
+        "4-5FG_4-3FG_4-2FG",
+        "5-5FG_4-4FG_3-3FG", "5-4FG_4-3FG_4-2FG", "5-5FG_5-3FG_5-2FG",
+        "6-3FG_4-2FG_10-1FG", "6-4FG_10-2FG_4-1FG", "6-4FG_4-3FG_6-2FG",
+        "6-5FG_6-4FG_6-1FG", "6-5FG_10-2FG_10-1FG", "6-5FG_6-3FG_6-2FG",
+        "6-5FG_8-3FG_6-1FG", "6-5FG_6-4FG_2-3FG",
+        "8-4FG_8-3FG_8-1FG", "8-4FG_10-3FG_2-1FG", "8-5FG_8-4FG_8-1FG",
+        "8-3FG_10-2FG_4-1FG", "8-5FG_8-3FG_8-2FG", "8-4FG_8-3FG_4-2FG",
+        "8-5FG_6-4FG_8-2FG", "8-5FG_10-3FG_10-1FG", "8-5FG_8-4FG_4-2FG",
+        "8-5FG_4-4FG_8-3FG", "8-4FG_4-3FG_10-2FG",
+        "10-5FG_10-4FG_10-1FG", "10-5FG_8-4FG_6-3FG", "10-4FG_10-3FG_10-1FG",
+        "10-4FG_8-3FG_8-2FG", "10-5FG_10-3FG_10-2FG", "10-3FG_10-2FG_10-1FG",
+        # And many more...
+    ]

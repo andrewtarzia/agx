@@ -20,7 +20,7 @@ agx.utilities
       :toctree:
       :nosignatures:
    
-      is_configured_code_isomoprhic
+      is_configured_code_isomorphic
    
    
 

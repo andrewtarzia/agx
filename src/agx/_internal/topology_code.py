@@ -72,6 +72,17 @@ class TopologyCode:
 
     def contains_doubles(self) -> bool:
         """True if the graph contains "double-walls"."""
+        return self.contains_xs(4)
+
+    def contains_xs(self, x: int) -> bool:
+        """True if the graph contains cycles of size x.
+
+        .. important::
+
+            **Warning**: This does not currently handle repeated cycles,
+            inverse cycles and shifted cycles.
+
+        """
         weighted_graph = self.get_weighted_graph()
 
         filtered_paths = set()
@@ -87,6 +98,8 @@ class TopologyCode:
             )
 
             for path in paths:
+                # This does not currently handle repeated cycles, inverse
+                # cycles and shifted cycles.
                 if (
                     tuple(path) not in filtered_paths
                     and tuple(path[::-1]) not in filtered_paths
@@ -96,7 +109,7 @@ class TopologyCode:
         path_lengths = [len(i) - 1 for i in filtered_paths]
         counter = Counter(path_lengths)
 
-        return counter[4] != 0
+        return counter[x] != 0
 
     def contains_parallels(self) -> bool:
         """True if the graph contains "1-loops"."""
@@ -114,7 +127,7 @@ class TopologyCode:
         layout_type: str,
         scale: float,
     ) -> dict[int, npt.NDArray[np.float64]]:
-        """Take a graph and genereate from graph vertex positions.
+        """Take a graph and generate a layout from graph vertex positions.
 
         .. important::
 

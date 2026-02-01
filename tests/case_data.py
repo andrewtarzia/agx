@@ -18,5 +18,8 @@ class CaseData:
     max_samples: int
     doubles: dict[int, bool]
     parallels: dict[int, bool]
+    threes: dict[int, bool]
+    fours: dict[int, bool]
+    sixes: dict[int, bool]
     iso_pass: abc.Sequence[tuple[int, int]]
     name: str
