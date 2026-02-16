@@ -57,7 +57,7 @@ def two_type_function() -> None:
             continue
 
         # Do not do all for larger stoichiomers.
-        if stoich not in ((1, 2),) and midx > 4:  # noqa: PLR2004
+        if stoich != (1, 2) and midx > 4:  # noqa: PLR2004
             continue
 
         fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)

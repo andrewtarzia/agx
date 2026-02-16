@@ -211,7 +211,7 @@ Generated with code:
 
     print(missing, file=sys.stderr)
     print(len(missing), file=sys.stderr)
-    assert len(missing) == 9
+    assert len(missing) == 7
 
 
 Not all graphs have been built due to cost, or non-valid chemistry.
@@ -220,8 +220,8 @@ Not all graphs have been built due to cost, or non-valid chemistry.
 
     # Missing.
     [
-        '8-5FG_20-2FG', '8-5FG_10-4FG',
-        '9-5FG_15-3FG', '9-4FG_12-3FG',
+        '8-5FG_20-2FG',
+        '9-5FG_15-3FG',
         '12-4FG_16-3FG', '12-5FG_15-4FG','12-5FG_20-3FG', '12-4FG_24-2FG',
         '16-5FG_20-4FG',
     ]
