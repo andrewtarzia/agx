@@ -32,6 +32,13 @@
 
    
    
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      BuildNotPossibleError
+   
    
 
 
