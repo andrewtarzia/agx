@@ -310,7 +310,7 @@ class TopologyIterator:
             # Add this anyway, either gets skipped, or adds the new one.
             combinations_tested.add(topology_code.get_as_string())
             # Progress.
-            if i % 10000 == 0 and self.verbose:
+            if i % 100 == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -396,7 +396,7 @@ class TopologyIterator:
             combinations_tested.add(topology_code.get_as_string())
 
             # Progress.
-            if i % 10000 == 0 and self.verbose:
+            if i % 100 == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -499,7 +499,7 @@ class TopologyIterator:
             combinations_tested.add(topology_code.get_as_string())
 
             # Progress.
-            if i % 10000 == 0 and self.verbose:
+            if i % 100 == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -560,6 +560,18 @@ class TopologyIterator:
             self._build()
 
         combinations, step_id = self._load_archive(self.graph_path)
+        # For transferring from old version of file to new.
+        # try:  # noqa: ERA001
+        #     combinations, step_id = self._load_archive(self.graph_path) # noqa: ERA001
+        # except TypeError: # noqa: ERA001
+        #     with gzip.open(str(self.graph_path), "r", 9) as f:
+        #         dictionary = json.load(f) # noqa: ERA001
+        #     self._write_archive(
+        #         path=self.graph_path, # noqa: ERA001
+        #         combinations_passed=dictionary, # noqa: ERA001
+        #         step=self.used_samples, # noqa: ERA001
+        #     ) # noqa: ERA001
+        #     combinations, step_id = self._load_archive(self.graph_path) # noqa: ERA001
 
         if self.verbose:
             logger.info("%s loaded at step %s", self.graph_path, step_id)
