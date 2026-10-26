@@ -118,8 +118,8 @@ class SkewedTopologyIterator:
 
     .. important::
 
-      This uses ``pynauty`` certificates for isomorphism checks, which is
-      faster but gives different isomorphism results than ``rustworkx``.
+      This uses ``pynauty`` certificates for isomorphism checks, not
+      ``rustworkx``.
 
     Parameters:
         node_counts:
