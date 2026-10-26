@@ -1,3 +1,4 @@
+import json
 import pathlib
 
 import networkx as nx
@@ -6,7 +7,7 @@ import rustworkx as rx
 
 import agx
 
-from .case_data import CaseData
+from .case_data import CaseData, SkewedCaseData
 
 
 def test_topology_code_nxgraph(graph_data: CaseData) -> None:
@@ -144,6 +145,55 @@ def test_topology_code_components(graph_data: CaseData) -> None:
         assert tc.get_number_connected_components() == 1
 
 
+def test_planar_topology_code(skewed_graph_data: SkewedCaseData) -> None:
+    """Test topology code methods.
+
+    Parameters:
+
+        graph_data:
+            The graph data.
+
+    """
+    graph_directory = (
+        pathlib.Path(__file__).resolve().parent / "test_skewed_graphs"
+    )
+    iterator = agx.SkewedTopologyIterator(
+        node_counts=skewed_graph_data.node_counts,
+        max_samples=skewed_graph_data.max_samples,
+        # Use known graphs.
+        graph_directory=graph_directory,
+    )
+
+    json_file = graph_directory / f"json_{iterator.graph_type}.json"
+    if not json_file.exists():
+        res_dict = {}
+        for tc in iterator.yield_graphs():
+            res_dict[tc.idx] = {
+                "certificate": str(tc.get_nauty_certificate()),
+                "skewness": tc.get_skewness_upper_bound(),
+                "automoprhism_grpsize": tc.get_nauty_automoprhism_grpsize(),
+            }
+        with json_file.open("w") as f:
+            json.dump(res_dict, f, indent=4)
+        raise AssertionError
+
+    with json_file.open("r") as f:
+        res_dict = json.load(f)
+
+    for tc in iterator.yield_graphs():
+        assert (
+            str(tc.get_nauty_certificate())
+            == res_dict[str(tc.idx)]["certificate"]
+        )
+        assert (
+            tc.get_skewness_upper_bound() == res_dict[str(tc.idx)]["skewness"]
+        )
+        assert (
+            tc.get_nauty_automoprhism_grpsize()
+            == res_dict[str(tc.idx)]["automoprhism_grpsize"]
+        )
+
+
 def test_topology_code_cycle_counts(graph_data: CaseData) -> None:
     """Test topology code methods.
 
@@ -161,9 +211,27 @@ def test_topology_code_cycle_counts(graph_data: CaseData) -> None:
         graph_directory=graph_directory,
     )
 
+    json_file = graph_directory / f"cycles_{iterator.graph_type}.json"
+    if not json_file.exists():
+        res_dict = {}
+        for tc in iterator.yield_graphs():
+            res_dict[tc.idx] = {
+                "doubles": tc.contains_doubles(),
+                "parallels": tc.contains_parallels(),
+                "threes": tc.contains_xs(3),
+                "fours": tc.contains_xs(4),
+                "sixes": tc.contains_xs(6),
+            }
+        with json_file.open("w") as f:
+            json.dump(res_dict, f, indent=4)
+        raise AssertionError
+
+    with json_file.open("r") as f:
+        res_dict = json.load(f)
+
     for tc in iterator.yield_graphs():
-        assert tc.contains_doubles() is graph_data.doubles[tc.idx]
-        assert tc.contains_parallels() is graph_data.parallels[tc.idx]
-        assert tc.contains_xs(3) is graph_data.threes[tc.idx]
-        assert tc.contains_xs(4) is graph_data.fours[tc.idx]
-        assert tc.contains_xs(6) is graph_data.sixes[tc.idx]
+        assert tc.contains_doubles() == res_dict[str(tc.idx)]["doubles"]
+        assert tc.contains_parallels() == res_dict[str(tc.idx)]["parallels"]
+        assert tc.contains_xs(3) == res_dict[str(tc.idx)]["threes"]
+        assert tc.contains_xs(4) == res_dict[str(tc.idx)]["fours"]
+        assert tc.contains_xs(6) == res_dict[str(tc.idx)]["sixes"]
