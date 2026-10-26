@@ -208,8 +208,9 @@ class TopologyIterator:
 
         return passed_iso
 
-    def _write_restart(
+    def _write_archive(
         self,
+        path: pathlib.Path,
         combinations_passed: list[abc.Sequence[tuple[int, int]]],
         step: int,
     ) -> None:
@@ -217,13 +218,30 @@ class TopologyIterator:
             "combos": combinations_passed,
             "step": step,
         }
-        with gzip.open(str(self.restart_path), "w", 9) as f:
+        with gzip.open(str(path), "w", 9) as f:
             f.write(json.dumps(dictionary).encode("utf8"))
 
-    def _load_restart(self) -> tuple[list[abc.Sequence[tuple[int, int]]], int]:
-        with gzip.open(str(self.restart_path), "r", 9) as f:
+    def _load_archive(
+        self,
+        path: pathlib.Path,
+    ) -> tuple[list[abc.Sequence[tuple[int, int]]], int]:
+        with gzip.open(str(path), "r", 9) as f:
             dictionary = json.load(f)
             return dictionary["combos"], dictionary["step"]
+
+    def _write_restart(
+        self,
+        combinations_passed: list[abc.Sequence[tuple[int, int]]],
+        step: int,
+    ) -> None:
+        self._write_archive(
+            path=self.restart_path,
+            combinations_passed=combinations_passed,
+            step=step,
+        )
+
+    def _load_restart(self) -> tuple[list[abc.Sequence[tuple[int, int]]], int]:
+        return self._load_archive(path=self.restart_path)
 
     def _delete_restart(self) -> None:
         if self.restart_path.exists():
@@ -302,9 +320,11 @@ class TopologyIterator:
                 )
                 self._write_restart(combinations_passed, i)
 
-        with gzip.open(str(self.graph_path), "w", 9) as f:
-            f.write(json.dumps(combinations_passed).encode("utf8"))
-
+        self._write_archive(
+            path=self.graph_path,
+            combinations_passed=combinations_passed,
+            step=i,
+        )
         self._delete_restart()
 
     def _two_type_possible(self) -> bool:
@@ -386,9 +406,11 @@ class TopologyIterator:
                 )
                 self._write_restart(combinations_passed, i)
 
-        with gzip.open(str(self.graph_path), "w", 9) as f:
-            f.write(json.dumps(combinations_passed).encode("utf8"))
-
+        self._write_archive(
+            path=self.graph_path,
+            combinations_passed=combinations_passed,
+            step=i,
+        )
         self._delete_restart()
 
     def _three_type_possible(self) -> bool:
@@ -487,9 +509,11 @@ class TopologyIterator:
                 )
                 self._write_restart(combinations_passed, i)
 
-        with gzip.open(str(self.graph_path), "w", 9) as f:
-            f.write(json.dumps(combinations_passed).encode("utf8"))
-
+        self._write_archive(
+            path=self.graph_path,
+            combinations_passed=combinations_passed,
+            step=i,
+        )
         self._delete_restart()
 
     def is_type_possible(self) -> bool:
@@ -528,15 +552,18 @@ class TopologyIterator:
             )
             raise RuntimeError(msg)
 
-    def _define_graphs(self) -> list[list[tuple[int, int]]]:
+    def _define_graphs(self) -> list[abc.Sequence[tuple[int, int]]]:
         if not self.graph_path.exists():
             if self.verbose:
                 logger.info("%s not found, constructing!", self.graph_path)
 
             self._build()
 
-        with gzip.open(str(self.graph_path), "r", 9) as f:
-            return json.load(f)
+        combinations, step_id = self._load_archive(self.graph_path)
+
+        if self.verbose:
+            logger.info("%s loaded at step %s", self.graph_path, step_id)
+        return combinations
 
     def count_graphs(self) -> int:
         """Count completely connected graphs in iteration."""
