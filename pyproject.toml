@@ -7,7 +7,7 @@ name = "agraphx"
 maintainers = [{ name = "Andrew Tarzia", email = "andrew.tarzia@gmail.com" }]
 dependencies = [
     "numpy",
-    "rustworkx",
+    "rustworkx==0.17.1",
     "networkx",
     "scipy",
     "pynauty",
