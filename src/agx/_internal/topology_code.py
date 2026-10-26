@@ -1,13 +1,17 @@
 """Define the topology code class."""
 
 import logging
+import pathlib
 from collections import Counter, abc
 from dataclasses import dataclass
 
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import numpy.typing as npt
+import pynauty
 import rustworkx as rx
+from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 logger = logging.getLogger(__name__)
 
