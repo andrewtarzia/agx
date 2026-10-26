@@ -150,7 +150,7 @@ class TopologyCode:
         if layout_type == "kamada":
             nxpos = nx.kamada_kawai_layout(nx_graph, dim=3)
         elif layout_type == "spring":
-            nxpos = nx.spring_layout(nx_graph, dim=3)
+            nxpos = nx.spring_layout(nx_graph, dim=3, seed=100)
         elif layout_type == "spectral":
             nxpos = nx.spectral_layout(nx_graph, dim=3)
         else:
