@@ -1,0 +1,37 @@
+{
+    "0": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": true
+    },
+    "1": {
+        "doubles": true,
+        "parallels": false,
+        "threes": false,
+        "fours": true,
+        "sixes": false
+    },
+    "2": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": false
+    },
+    "3": {
+        "doubles": false,
+        "parallels": true,
+        "threes": false,
+        "fours": false,
+        "sixes": false
+    },
+    "5": {
+        "doubles": false,
+        "parallels": false,
+        "threes": false,
+        "fours": false,
+        "sixes": true
+    }
+}

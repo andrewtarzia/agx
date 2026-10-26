@@ -1,0 +1,16 @@
+{
+    "0": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": false
+    },
+    "1": {
+        "doubles": true,
+        "parallels": false,
+        "threes": false,
+        "fours": true,
+        "sixes": false
+    }
+}
