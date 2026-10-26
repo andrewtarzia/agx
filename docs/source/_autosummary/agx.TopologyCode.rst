@@ -23,9 +23,15 @@ agx.TopologyCode
       ~TopologyCode.get_as_string
       ~TopologyCode.get_graph
       ~TopologyCode.get_layout
+      ~TopologyCode.get_nauty_automoprhism_grpsize
+      ~TopologyCode.get_nauty_certificate
+      ~TopologyCode.get_nauty_graph
       ~TopologyCode.get_number_connected_components
       ~TopologyCode.get_nx_graph
+      ~TopologyCode.get_skewness_upper_bound
       ~TopologyCode.get_weighted_graph
+      ~TopologyCode.visualise
+      ~TopologyCode.visualise_3d
    
    
 

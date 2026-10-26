@@ -20,6 +20,7 @@
       ConfiguredCode
       Node
       NodeType
+      SkewedTopologyIterator
       TopologyCode
       TopologyIterator
    
@@ -38,6 +39,7 @@
       :toctree:
    
       BuildNotPossibleError
+      ParallelEdgeError
    
    
 
