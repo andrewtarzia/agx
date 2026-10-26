@@ -96,22 +96,7 @@ Generated with code:
 
     print(missing, file=sys.stderr)
     print(len(missing), file=sys.stderr)
-    assert len(missing) == 4
-
-Not all graphs have been built due to cost, or non-valid chemistry.
-
-.. code-block:: python
-
-    # Missing.
-    [
-        '1-1FG', '1-3FG', '1-5FG',
-        '3-1FG', '3-3FG', '3-5FG',
-        '5-1FG', '5-3FG', '5-5FG',
-        '7-1FG', '7-3FG', '7-5FG',
-        '9-1FG', '9-3FG', '9-5FG',
-        '11-1FG', '11-3FG', '11-4FG', '11-5FG',
-        '12-2FG', '12-3FG', '12-4FG', '12-5FG'
-    ]
+    assert len(missing) == 0
 
 Two-type graphs
 ^^^^^^^^^^^^^^^
@@ -211,7 +196,7 @@ Generated with code:
 
     print(missing, file=sys.stderr)
     print(len(missing), file=sys.stderr)
-    assert len(missing) == 7
+    assert len(missing) == 5
 
 
 Not all graphs have been built due to cost, or non-valid chemistry.
@@ -220,9 +205,8 @@ Not all graphs have been built due to cost, or non-valid chemistry.
 
     # Missing.
     [
-        '8-5FG_20-2FG',
         '9-5FG_15-3FG',
-        '12-4FG_16-3FG', '12-5FG_15-4FG','12-5FG_20-3FG', '12-4FG_24-2FG',
+        '12-5FG_15-4FG','12-5FG_20-3FG', '12-4FG_24-2FG',
         '16-5FG_20-4FG',
     ]
 
@@ -329,7 +313,7 @@ Generated with code:
 
     print(missing, file=sys.stderr)
     print(len(missing), file=sys.stderr)
-    assert len(missing) == 314
+    assert len(missing) == 252
 
 Not all graphs have been built due to cost, or non-valid chemistry.
 
