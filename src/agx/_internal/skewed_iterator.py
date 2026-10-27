@@ -360,6 +360,8 @@ class SkewedTopologyIterator:
             }
             logger.info("loaded restart file, skipping to %s", step)
 
+        time_since_new = 0
+        counter_interval = 100
         for i in range(self.used_samples):
             # Shuffle.
             rng.shuffle(options)
@@ -404,11 +406,12 @@ class SkewedTopologyIterator:
                     raise RuntimeError(msg)
                 combinations_passed.append(planar_code.vertex_map)
                 certificates.add(planar_code.get_nauty_certificate())
+                time_since_new = 0
 
             # Add this anyway, either gets skipped, or adds the new one.
             combinations_tested.add(planar_code.get_as_string())
             # Progress.
-            if i % 100 == 0 and self.verbose:
+            if i % counter_interval == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -417,6 +420,14 @@ class SkewedTopologyIterator:
                     len(combinations_passed),
                 )
                 self._write_restart(combinations_passed, i)
+                time_since_new += counter_interval
+
+            # Early cut.
+            if time_since_new > counter_interval * 40:
+                logger.info(
+                    "cutting early as not found anything new for a while"
+                )
+                break
 
         self._write_archive(
             path=self.graph_path,
@@ -474,6 +485,8 @@ class SkewedTopologyIterator:
             }
             logger.info("loaded restart file, skipping to %s", step)
 
+        time_since_new = 0
+        counter_interval = 100
         for i in range(self.used_samples):
             rng.shuffle(options)
 
@@ -509,12 +522,13 @@ class SkewedTopologyIterator:
                     raise RuntimeError(msg)
                 combinations_passed.append(planar_code.vertex_map)
                 certificates.add(planar_code.get_nauty_certificate())
+                time_since_new = 0
 
             # Add this anyway, either gets skipped, or adds the new one.
             combinations_tested.add(planar_code.get_as_string())
 
             # Progress.
-            if i % 100 == 0 and self.verbose:
+            if i % counter_interval == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -523,6 +537,14 @@ class SkewedTopologyIterator:
                     len(combinations_passed),
                 )
                 self._write_restart(combinations_passed, i)
+                time_since_new += counter_interval
+
+            # Early cut.
+            if time_since_new > counter_interval * 40:
+                logger.info(
+                    "cutting early as not found anything new for a while"
+                )
+                break
 
         self._write_archive(
             path=self.graph_path,
@@ -595,6 +617,8 @@ class SkewedTopologyIterator:
             }
             logger.info("loaded restart file, skipping to %s", step)
 
+        time_since_new = 0
+        counter_interval = 100
         for i in range(self.used_samples):
             # Merging options1 and options2 because they both bind to itera.
             mixed_options = options1 + options2
@@ -632,12 +656,13 @@ class SkewedTopologyIterator:
                     raise RuntimeError(msg)
                 combinations_passed.append(planar_code.vertex_map)
                 certificates.add(planar_code.get_nauty_certificate())
+                time_since_new = 0
 
             # Add this anyway, either gets skipped, or adds the new one.
             combinations_tested.add(planar_code.get_as_string())
 
             # Progress.
-            if i % 100 == 0 and self.verbose:
+            if i % counter_interval == 0 and self.verbose:
                 logger.info(
                     "done %s of %s (%s/100.0); found %s",
                     i,
@@ -646,6 +671,14 @@ class SkewedTopologyIterator:
                     len(combinations_passed),
                 )
                 self._write_restart(combinations_passed, i)
+                time_since_new += counter_interval
+
+            # Early cut.
+            if time_since_new > counter_interval * 40:
+                logger.info(
+                    "cutting early as not found anything new for a while"
+                )
+                break
 
         self._write_archive(
             path=self.graph_path,
@@ -699,6 +732,19 @@ class SkewedTopologyIterator:
             self._build()
 
         combinations, step_id = self._load_archive(self.graph_path)
+        # For transferring from old version of file to new.
+        # try:  # noqa: ERA001
+        #     combinations, step_id = self._load_archive(self.graph_path)# noqa: ERA001
+        # except TypeError:# noqa: ERA001
+        #     with gzip.open(str(self.graph_path), "r", 9) as f:
+        #         dictionary = json.load(f)# noqa: ERA001
+        #     self._write_archive(
+        #         path=self.graph_path,# noqa: ERA001
+        #         combinations_passed=dictionary,# noqa: ERA001
+        #         step=self.used_samples,# noqa: ERA001
+        #     )# noqa: ERA001
+        #     combinations, step_id = self._load_archive(self.graph_path)# noqa: ERA001
+
         if self.verbose:
             logger.info("%s loaded at step %s", self.graph_path, step_id)
         return combinations
