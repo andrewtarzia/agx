@@ -7,9 +7,10 @@ name = "agraphx"
 maintainers = [{ name = "Andrew Tarzia", email = "andrew.tarzia@gmail.com" }]
 dependencies = [
     "numpy",
-    "rustworkx",
+    "rustworkx==0.17.1",
     "networkx",
     "scipy",
+    "pynauty",
 ]
 requires-python = ">=3.11"
 dynamic = ["version"]
@@ -19,9 +20,7 @@ readme = "README.rst"
 dev = [
     "ruff",
     "mypy",
-    # TODO: Remove pin when https://github.com/TvoroG/pytest-lazy-fixture/issues/65 is resolved.
-    # pytest-lazy-fixture 0.6.0 is incompatible with pytest 8.0.0
-    "pytest<8",
+    "pytest",
     "pytest-cov",
     "sphinx",
     "sphinx-copybutton",
@@ -47,7 +46,7 @@ line-length = 79
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["ANN401", "COM812", "ISC001", "FBT001", "FBT002"]
+ignore = ["ANN401", "COM812", "ISC001", "FBT001", "FBT002", "CPY001"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -74,6 +73,8 @@ disallow_any_generics = true
 [[tool.mypy.overrides]]
 module = [
   "networkx.*",
+  "pynauty.*",
+  "mpl_toolkits.*",
 ]
 ignore_missing_imports = true
 

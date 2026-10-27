@@ -63,7 +63,7 @@ def two_type_function() -> None:
             f"{midx * stoich[0]}-{fgnum1_}FG_{midx * stoich[1]}-{fgnum2_}FG"
         )
         if string in (
-            #"9-5FG_15-3FG",
+            "9-5FG_15-3FG",
             "12-5FG_15-4FG",
             "12-5FG_20-3FG",
             "16-5FG_20-4FG",
@@ -111,7 +111,247 @@ def three_type_function() -> None:
             f"{midx * stoich[2]}-{fgnum3_}FG"
         )
 
-        if "1FG" in string:
+        if "1FG" in string or string in (
+            "8-4FG_6-3FG_7-2FG",
+            "8-4FG_8-3FG_4-2FG",
+            "3-5FG_3-3FG_3-2FG",
+            "4-4FG_2-3FG_5-2FG",
+            "4-5FG_4-3FG_4-2FG",
+            "4-5FG_3-4FG_4-2FG",
+            "4-5FG_4-4FG_2-2FG",
+            "4-5FG_2-4FG_4-3FG",
+            "4-5FG_2-4FG_6-2FG",
+            "5-4FG_4-3FG_4-2FG",
+            "5-5FG_5-3FG_5-2FG",
+            "5-5FG_4-4FG_3-3FG",
+            "6-4FG_4-3FG_6-2FG",
+            "6-5FG_6-4FG_2-3FG",
+            "8-4FG_4-3FG_10-2FG",
+            "8-4FG_8-3FG_4-2FG",
+            "6-5FG_6-3FG_6-2FG",
+            "8-5FG_8-3FG_8-2FG",
+            "8-5FG_6-4FG_8-2FG",
+            "8-5FG_8-4FG_4-2FG",
+            "8-5FG_4-4FG_8-3FG",
+            "10-4FG_8-3FG_8-2FG",
+            "10-5FG_10-3FG_10-2FG",
+            "10-5FG_8-4FG_6-3FG",
+            "5-4FG_2-3FG_7-2FG",
+            "5-4FG_6-3FG_1-2FG",
+            "6-4FG_2-3FG_9-2FG",
+            "6-4FG_6-3FG_3-2FG",
+            "7-4FG_4-3FG_8-2FG",
+            "7-4FG_6-3FG_5-2FG",
+            "7-4FG_8-3FG_2-2FG",
+            "8-4FG_6-3FG_7-2FG",
+            "8-4FG_10-3FG_1-2FG",
+            "9-4FG_6-3FG_9-2FG",
+            "9-4FG_8-3FG_6-2FG",
+            "9-4FG_10-3FG_3-2FG",
+            "3-5FG_1-3FG_6-2FG",
+            "4-5FG_2-3FG_7-2FG",
+            "4-5FG_6-3FG_1-2FG",
+            "5-5FG_3-3FG_8-2FG",
+            "5-5FG_7-3FG_2-2FG",
+            "6-5FG_4-3FG_9-2FG",
+            "6-5FG_8-3FG_3-2FG",
+            "7-5FG_5-3FG_10-2FG",
+            "7-5FG_7-3FG_7-2FG",
+            "7-5FG_9-3FG_4-2FG",
+            "8-5FG_10-3FG_5-2FG",
+            "9-5FG_9-3FG_9-2FG",
+            "10-4FG_10-3FG_5-2FG",
+            "4-5FG_1-4FG_8-2FG",
+            "6-5FG_3-4FG_9-2FG",
+            "6-5FG_4-4FG_7-2FG",
+            "6-5FG_5-4FG_5-2FG",
+            "6-5FG_6-4FG_3-2FG",
+            "6-5FG_7-4FG_1-2FG",
+            "8-5FG_5-4FG_10-2FG",
+            "8-5FG_7-4FG_6-2FG",
+            "8-5FG_9-4FG_2-2FG",
+            "10-5FG_8-4FG_9-2FG",
+            "10-5FG_9-4FG_7-2FG",
+            "10-5FG_10-4FG_5-2FG",
+            "3-5FG_1-3FG_6-2FG",
+            "4-5FG_2-3FG_7-2FG",
+            "4-5FG_6-3FG_1-2FG",
+            "5-5FG_3-3FG_8-2FG",
+            "5-5FG_7-3FG_2-2FG",
+            "5-5FG_1-4FG_7-3FG",
+            "6-5FG_3-4FG_6-3FG",
+            "7-5FG_2-4FG_9-3FG",
+            "7-5FG_5-4FG_5-3FG",
+            "7-5FG_8-4FG_1-3FG",
+            "8-5FG_7-4FG_4-3FG",
+            "9-5FG_6-4FG_7-3FG",
+            "9-5FG_9-4FG_3-3FG",
+            "5-5FG_1-4FG_7-3FG",
+            "6-5FG_3-4FG_6-3FG",
+            "10-4FG_4-3FG_14-2FG",
+            "10-4FG_12-3FG_2-2FG",
+            "12-4FG_4-3FG_18-2FG",
+            "12-4FG_8-3FG_12-2FG",
+            "12-4FG_12-3FG_6-2FG",
+            "14-4FG_8-3FG_16-2FG",
+            "14-4FG_12-3FG_10-2FG",
+            "14-4FG_16-3FG_4-2FG",
+            "16-4FG_8-3FG_20-2FG",
+            "16-4FG_12-3FG_14-2FG",
+            "16-4FG_16-3FG_8-2FG",
+            "16-4FG_20-3FG_2-2FG",
+            "18-4FG_12-3FG_18-2FG",
+            "18-4FG_16-3FG_12-2FG",
+            "18-4FG_20-3FG_6-2FG",
+            "20-4FG_16-3FG_16-2FG",
+            "20-4FG_20-3FG_10-2FG",
+            "10-4FG_4-3FG_14-2FG",
+            "10-4FG_12-3FG_2-2FG",
+            "12-4FG_4-3FG_18-2FG",
+            "12-4FG_8-3FG_12-2FG",
+            "12-4FG_12-3FG_6-2FG",
+            "14-4FG_8-3FG_16-2FG",
+            "14-4FG_12-3FG_10-2FG",
+            "14-4FG_16-3FG_4-2FG",
+            "16-4FG_8-3FG_20-2FG",
+            "16-4FG_12-3FG_14-2FG",
+            "16-4FG_16-3FG_8-2FG",
+            "16-4FG_20-3FG_2-2FG",
+            "18-4FG_12-3FG_18-2FG",
+            "18-4FG_16-3FG_12-2FG",
+            "18-4FG_20-3FG_6-2FG",
+            "20-4FG_16-3FG_16-2FG",
+            "20-4FG_20-3FG_10-2FG",
+            "7-5FG_2-4FG_9-3FG",
+            "7-5FG_5-4FG_5-3FG",
+            "7-5FG_8-4FG_1-3FG",
+            "8-5FG_7-4FG_4-3FG",
+            "9-5FG_6-4FG_7-3FG",
+            "9-5FG_9-4FG_3-3FG",
+            "10-5FG_5-4FG_10-3FG",
+            "10-5FG_5-4FG_10-3FG",
+            "5-5FG_1-4FG_7-3FG",
+            "6-5FG_3-4FG_6-3FG",
+            "7-5FG_2-4FG_9-3FG",
+            "7-5FG_5-4FG_5-3FG",
+            "7-5FG_8-4FG_1-3FG",
+            "8-5FG_7-4FG_4-3FG",
+            "9-5FG_6-4FG_7-3FG",
+            "9-5FG_9-4FG_3-3FG",
+            "10-5FG_5-4FG_10-3FG",
+            "5-5FG_1-4FG_7-3FG",
+            "6-5FG_3-4FG_6-3FG",
+            "7-5FG_2-4FG_9-3FG",
+            "7-5FG_5-4FG_5-3FG",
+            "5-5FG_1-4FG_7-3FG",
+            "6-5FG_3-4FG_6-3FG",
+            "7-5FG_2-4FG_9-3FG",
+            "5-5FG_1-4FG_7-3FG",
+            "6-5FG_3-4FG_6-3FG",
+            "7-5FG_2-4FG_9-3FG",
+            "7-5FG_5-4FG_5-3FG",
+            "7-5FG_8-4FG_1-3FG",
+            "8-5FG_7-4FG_4-3FG",
+            "9-5FG_6-4FG_7-3FG",
+            "9-5FG_9-4FG_3-3FG",
+            "10-5FG_5-4FG_10-3FG",
+            "7-5FG_5-4FG_5-3FG",
+            "7-5FG_8-4FG_1-3FG",
+            "8-5FG_7-4FG_4-3FG",
+            "9-5FG_6-4FG_7-3FG",
+            "9-5FG_9-4FG_3-3FG",
+            "10-5FG_5-4FG_10-3FG",
+            "7-5FG_8-4FG_1-3FG",
+            "8-5FG_7-4FG_4-3FG",
+            "9-5FG_6-4FG_7-3FG",
+            "9-5FG_9-4FG_3-3FG",
+            "10-5FG_5-4FG_10-3FG",
+            "6-5FG_4-3FG_9-2FG",
+            "6-5FG_8-3FG_3-2FG",
+            "7-5FG_5-3FG_10-2FG",
+            "7-5FG_7-3FG_7-2FG",
+            "7-5FG_9-3FG_4-2FG",
+            "8-5FG_10-3FG_5-2FG",
+            "9-5FG_9-3FG_9-2FG",
+            "4-5FG_1-4FG_8-2FG",
+            "6-5FG_3-4FG_9-2FG",
+            "6-5FG_4-4FG_7-2FG",
+            "6-5FG_5-4FG_5-2FG",
+            "6-5FG_6-4FG_3-2FG",
+            "6-5FG_7-4FG_1-2FG",
+            "8-5FG_5-4FG_10-2FG",
+            "8-5FG_7-4FG_6-2FG",
+            "8-5FG_9-4FG_2-2FG",
+            "10-5FG_8-4FG_9-2FG",
+            "10-5FG_9-4FG_7-2FG",
+            "6-5FG_2-3FG_12-2FG",
+            "8-5FG_4-3FG_14-2FG",
+            "8-5FG_12-3FG_2-2FG",
+            "10-5FG_6-3FG_16-2FG",
+            "10-5FG_14-3FG_4-2FG",
+            "12-5FG_8-3FG_18-2FG",
+            "12-5FG_12-3FG_12-2FG",
+            "12-5FG_16-3FG_6-2FG",
+            "14-5FG_10-3FG_20-2FG",
+            "14-5FG_14-3FG_14-2FG",
+            "14-5FG_18-3FG_8-2FG",
+            "16-5FG_16-3FG_16-2FG",
+            "16-5FG_20-3FG_10-2FG",
+            "18-5FG_18-3FG_18-2FG",
+            "20-5FG_20-3FG_20-2FG",
+            "10-5FG_2-4FG_14-3FG",
+            "12-5FG_6-4FG_12-3FG",
+            "12-5FG_12-4FG_4-3FG",
+            "14-5FG_4-4FG_18-3FG",
+            "14-5FG_10-4FG_10-3FG",
+            "14-5FG_16-4FG_2-3FG",
+            "16-5FG_8-4FG_16-3FG",
+            "16-5FG_14-4FG_8-3FG",
+            "18-5FG_12-4FG_14-3FG",
+            "18-5FG_18-4FG_6-3FG",
+            "20-5FG_10-4FG_20-3FG",
+            "20-5FG_16-4FG_12-3FG",
+            "8-5FG_2-4FG_16-2FG",
+            "8-5FG_4-4FG_12-2FG",
+            "12-5FG_6-4FG_18-2FG",
+            "12-5FG_8-4FG_14-2FG",
+            "12-5FG_10-4FG_10-2FG",
+            "12-5FG_12-4FG_6-2FG",
+            "12-5FG_14-4FG_2-2FG",
+            "16-5FG_10-4FG_20-2FG",
+            "16-5FG_12-4FG_16-2FG",
+            "16-5FG_14-4FG_12-2FG",
+            "16-5FG_16-4FG_8-2FG",
+            "16-5FG_18-4FG_4-2FG",
+            "20-5FG_16-4FG_18-2FG",
+            "20-5FG_18-4FG_14-2FG",
+            "20-5FG_20-4FG_10-2FG",
+            "10-5FG_2-4FG_14-3FG",
+            "12-5FG_6-4FG_12-3FG",
+            "12-5FG_12-4FG_4-3FG",
+            "14-5FG_4-4FG_18-3FG",
+            "14-5FG_10-4FG_10-3FG",
+            "14-5FG_16-4FG_2-3FG",
+            "16-5FG_8-4FG_16-3FG",
+            "16-5FG_14-4FG_8-3FG",
+            "18-5FG_12-4FG_14-3FG",
+            "18-5FG_18-4FG_6-3FG",
+            "20-5FG_10-4FG_20-3FG",
+            "20-5FG_16-4FG_12-3FG",
+            "3-5FG_1-3FG_6-2FG",
+            "4-5FG_2-3FG_7-2FG",
+            "4-5FG_6-3FG_1-2FG",
+            "5-5FG_3-3FG_8-2FG",
+            "5-5FG_7-3FG_2-2FG",
+            "6-5FG_4-3FG_9-2FG",
+            "6-5FG_8-3FG_3-2FG",
+            "7-5FG_5-3FG_10-2FG",
+            "7-5FG_7-3FG_7-2FG",
+            "7-5FG_9-3FG_4-2FG",
+            "8-5FG_10-3FG_5-2FG",
+            "9-5FG_9-3FG_9-2FG",
+            "10-5FG_10-4FG_5-2FG",
+        ):
             continue
 
         iterator = agx.TopologyIterator(
@@ -132,6 +372,119 @@ def three_type_function() -> None:
             )
 
 
+def skew_one_type_function() -> None:
+    """Build one-type graphs."""
+    bbs = {1, 2, 3, 4, 5}
+    multipliers = range(1, 13)
+    for midx, fgnum in it.product(multipliers, bbs):
+        string = f"{midx}-{fgnum}FG"
+
+        if string in ():  # noqa: RUF060
+            continue
+
+        iterator = agx.SkewedTopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum): midx,
+            },
+            graph_set="skw",
+        )
+        if iterator.is_type_possible():
+            logger.info("trying %s", string)
+            logger.info(
+                "graph iteration has %s graphs", iterator.count_graphs()
+            )
+
+
+def skew_two_type_function() -> None:
+    """Build two-type graphs."""
+    bbs = {1, 2, 3, 4, 5}
+
+    # Two typers.
+    multipliers = range(1, 13)
+    two_type_stoichiometries = tuple(
+        (i, j) for i, j in it.product((1, 2, 3, 4, 5), repeat=2)
+    )
+    for midx, fgnum1, fgnum2, stoich in it.product(
+        multipliers, bbs, bbs, two_type_stoichiometries
+    ):
+        if fgnum1 == fgnum2:
+            continue
+
+        # Do not do all for larger stoichiomers.
+        if stoich != (1, 2) and midx > 4:  # noqa: PLR2004
+            continue
+
+        fgnum1_, fgnum2_ = sorted((fgnum1, fgnum2), reverse=True)
+
+        string = (
+            f"{midx * stoich[0]}-{fgnum1_}FG_{midx * stoich[1]}-{fgnum2_}FG"
+        )
+
+        if string in ():  # noqa: RUF060
+            continue
+
+        iterator = agx.SkewedTopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                * stoich[0],
+                agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                * stoich[1],
+            },
+            graph_set="skw",
+        )
+        if iterator.is_type_possible():
+            logger.info("trying %s", string)
+            logger.info(
+                "graph iteration has %s graphs", iterator.count_graphs()
+            )
+
+
+def skew_three_type_function() -> None:
+    """Build three-type graphs."""
+    bbs = {2, 3, 4, 5}
+
+    # Three typers.
+    multipliers = (1, 2)
+    three_type_stoichiometries = tuple(
+        (i, j, k)
+        for i, j, k in it.product((1, 2, 3, 4, 5, 6, 7, 8, 9, 10), repeat=3)
+    )
+    for midx, fgnum1, fgnum2, fgnum3, stoich in it.product(
+        multipliers, bbs, bbs, bbs, three_type_stoichiometries
+    ):
+        if fgnum1 in (fgnum2, fgnum3) or fgnum2 == fgnum3:
+            continue
+        fgnum1_, fgnum2_, fgnum3_ = sorted(
+            (fgnum1, fgnum2, fgnum3), reverse=True
+        )
+
+        string = (
+            f"{midx * stoich[0]}-{fgnum1_}FG_"
+            f"{midx * stoich[1]}-{fgnum2_}FG_"
+            f"{midx * stoich[2]}-{fgnum3_}FG"
+        )
+
+        if string in ():  # noqa: RUF060
+            continue
+
+        iterator = agx.SkewedTopologyIterator(
+            node_counts={
+                agx.NodeType(type_id=0, num_connections=fgnum1_): midx
+                * stoich[0],
+                agx.NodeType(type_id=1, num_connections=fgnum2_): midx
+                * stoich[1],
+                agx.NodeType(type_id=2, num_connections=fgnum3_): midx
+                * stoich[2],
+            },
+            graph_set="skw",
+        )
+        if iterator.is_type_possible():
+            logger.info("trying %s", string)
+            logger.info(
+                "graph iteration has %s graphs", iterator.count_graphs()
+            )
+
+
 def main() -> None:
     args = _parse_args()
 
@@ -141,6 +494,12 @@ def main() -> None:
         two_type_function()
     elif args.type == "three":
         three_type_function()
+    elif args.type == "skew_one":
+        skew_one_type_function()
+    elif args.type == "skew_two":
+        skew_two_type_function()
+    elif args.type == "skew_three":
+        skew_three_type_function()
     else:
         msg = f"{args.type} type cannot be done so far"
         raise RuntimeError(msg)

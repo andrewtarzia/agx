@@ -5,7 +5,8 @@ from agx._internal.configuration import Configuration
 from agx._internal.configuredcode import ConfiguredCode
 from agx._internal.enumeration import BuildNotPossibleError, TopologyIterator
 from agx._internal.node import Node, NodeType
-from agx._internal.topology_code import TopologyCode
+from agx._internal.skewed_iterator import SkewedTopologyIterator
+from agx._internal.topology_code import ParallelEdgeError, TopologyCode
 
 __all__ = [
     "BuildNotPossibleError",
@@ -14,6 +15,8 @@ __all__ = [
     "Constructed",
     "Node",
     "NodeType",
+    "ParallelEdgeError",
+    "SkewedTopologyIterator",
     "TopologyCode",
     "TopologyIterator",
     "utilities",

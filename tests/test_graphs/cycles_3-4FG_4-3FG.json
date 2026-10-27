@@ -1,0 +1,65 @@
+{
+    "0": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": true
+    },
+    "1": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": false
+    },
+    "2": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": true
+    },
+    "3": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": true
+    },
+    "4": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": false
+    },
+    "5": {
+        "doubles": true,
+        "parallels": false,
+        "threes": false,
+        "fours": true,
+        "sixes": true
+    },
+    "6": {
+        "doubles": false,
+        "parallels": true,
+        "threes": false,
+        "fours": false,
+        "sixes": false
+    },
+    "7": {
+        "doubles": true,
+        "parallels": true,
+        "threes": false,
+        "fours": true,
+        "sixes": false
+    },
+    "8": {
+        "doubles": false,
+        "parallels": true,
+        "threes": false,
+        "fours": false,
+        "sixes": false
+    }
+}

@@ -5,6 +5,7 @@
 
    Graphs <graphs>
    Available graphs <avail_graphs>
+   Skewed graphs <skewed_graphs>
    Recipes <recipes>
    Utilities <utilities>
 
