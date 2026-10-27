@@ -483,12 +483,6 @@ def skew_three_type_function() -> None:
             logger.info(
                 "graph iteration has %s graphs", iterator.count_graphs()
             )
-            for tc in iterator.yield_graphs():
-                tc.visualise(name="test", output_file=f"graph_{tc.idx}.png")
-                tc.visualise_3d(
-                    name="test",
-                    output_file=f"graph3d_{tc.idx}.png",
-                )
 
 
 def main() -> None:
